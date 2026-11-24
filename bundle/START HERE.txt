@@ -1,0 +1,81 @@
+GuildSim 0.2.0-beta.1 — Windows x64
+
+INSTALL ONCE
+
+Ret users: have GearMatic preinstalled. GuildSim preserves its files and
+settings; it does not install, redistribute, modify or update GearMatic.
+
+Download and run GuildSim-Setup.exe. No ZIP extraction, Python, Go compiler,
+administrator account or GitHub login is needed. Close WoW once if running.
+The helper detects a standard Forever folder or asks you to choose it once.
+Enable GuildSim Beta and WowSimsExporter in game. Use /guildsim, Update sims,
+then manually /reload. Keep playing while the helper works. Reload again when
+results are ready. Closing the helper window leaves it running in the
+background; use its desktop/Start menu shortcut to reopen or Quit helper to exit.
+
+AUTOMATIC UPDATES
+
+The helper checks the public GuildSim release channel on startup and every
+30 minutes. It downloads, verifies Ed25519 signatures and SHA-256 checksums,
+and tests new releases before switching. Installation waits for WoW and
+simulations to close. The addon, helper and pinned engine update together.
+The preceding version is retained for startup recovery. Character settings,
+captures, caches, references and fight history live outside application files.
+They are never uploaded. GearMatic and an existing exporter are preserved.
+
+https://github.com/bryan970/guildsim/releases/latest
+
+RET FEATURES
+
+Human, Dwarf and Undead; WoWSims Forever v1.0.4. The full Unsealed Wrath Ret
+workflow includes native stat weights, GearMatic imports and stat handling,
+character-pane browsing, owned/bag/manual/inspected comparisons, full phase-1
+catalogs and suffix variants, weapon/enchant comparisons, quick and settled
+catalog refresh, independent trinket pairs in both slot orders, fixed catalog
+references, creature type/family profiles, Rune versus Undead, partial-model
+and sampling-error labels, native caches, farming targets, target-set weights
+and a local SQLite fight library. Leveling gear is projected to level 60 and
+labeled; below-level-60 combat is not simulated.
+
+MOVING A PERSONAL RET SETUP
+
+Close WoW, choose the Ret character and click Move personal setup. Select the
+old helper folder containing config.json and output. Settings, farming plan,
+reference pair, combat-trinket memory, pools, requests and fight history are
+copied locally. New results are validated first. Handoff waits until WoW is
+closed and the old helper is idle with no active child workers. The legacy
+addon is backed up; original helper files and SavedVariables remain available.
+An ongoing personal catalog is not interrupted. Until handoff the old addon
+retains its automatic character panel and weight imports.
+
+PRIEST
+
+Discipline raid healer, all six native Priest races, level 60 and 31+ Disc
+points. EXPERIMENTAL STATS PLANNER ONLY: healing power, mana, regen and crit.
+No effective-HPS ranking, healing simulation, or healing-proc valuation.
+GearMatic is not required for Priest stat planning.
+
+DATA AND RECOVERY
+
+%LOCALAPPDATA%\GuildSimBeta\settings.json — helper preferences
+%LOCALAPPDATA%\GuildSimBeta\releases — versioned program files
+%LOCALAPPDATA%\GuildSimBeta\ret-characters — Ret settings, caches and fight library
+%LOCALAPPDATA%\GuildSimBeta\characters — Priest references and trinket pools
+WoW\WTF\Account\...\SavedVariables\GuildSimBeta.lua — in-game requests
+
+Ret scenario.json, prebis-targets.json and fight-library.sqlite remain in the
+character folder. New users start from a public native reference preset;
+personal migration imports existing farming targets.
+
+This is a beta requiring in-game guild acceptance testing. Native effect
+coverage is incomplete; keep partial-model and statistical-error labels in
+mind. Full catalogs can take hours; completed native batches are reused.
+The installer is not Authenticode signed, so Windows may show a first-run
+notice. Update signing keys are not included in a download.
+
+For manual rollback, close WoW and the helper, restore the desired addon
+backup from WoW\GuildSimBetaBackups and launch the previous helper release
+under %LOCALAPPDATA%\GuildSimBeta\releases. Preserve SavedVariables and caches.
+
+Powered by WoWSims Forever and WowSimsExporter (MIT); see licenses/.
+Not affiliated with Blizzard, WoWSims or GearMatic.

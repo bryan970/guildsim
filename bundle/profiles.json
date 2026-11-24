@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "engineVersion": "v1.0.4",
+  "engineCommit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
+  "profiles": {
+    "ret": {
+      "class": "paladin",
+      "role": "damage",
+      "races": ["Human", "Dwarf", "Undead"],
+      "backend": "wowsims-forever-native",
+      "objective": "DPS",
+      "status": "beta",
+      "requirements": "Level 60, exported talents, two-handed main hand, at least 12 equipped items.",
+      "defaults": "Native Unsealed Wrath default APL. Public upstream Ret buffs and consumables; review defaults.json or exact nativeRequest in the local fight library. Exported talents and professions replace preset choices."
+    },
+    "disc-raid": {
+      "class": "priest",
+      "role": "raid-healer",
+      "races": ["Human", "Dwarf", "NightElf", "Gnome", "Undead", "Troll"],
+      "backend": "wowsims-forever-native-stats",
+      "objective": "Character stats only",
+      "status": "experimental-stats-planner",
+      "requirements": "Level 60, at least 31 points in Discipline, at least 12 equipped items.",
+      "defaults": "Exported talents and professions, no raid buffs or consumables. Override explicitly using local scenario.json.",
+      "healingSimulation": false,
+      "limitations": ["No effective HPS or throughput simulation", "No overhealing, consumed-absorb, healing AI or healer-competition model", "No healing trinket or set-proc ranking", "Upstream sheet may omit Holy Specialization extra crit"]
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "name": "Raid reference \u2014 180s level-63 boss, public native preset buffs",
+  "duration": 180,
+  "target_level": 63,
+  "raid_buffs": {
+    "arcaneIntellect": true,
+    "prayerOfSpirit": true,
+    "markOfTheWild": true,
+    "powerWordFortitude": true,
+    "strengthOfEarthTotem": 1,
+    "graceOfAirTotem": 1,
+    "windfuryTotem": true,
+    "battleShout": 1,
+    "leaderOfThePack": true
+  },
+  "party_buffs": {
+    "manaSpringTotem": "TristateEffectRegular"
+  },
+  "debuffs": {
+    "judgementOfLight": true,
+    "judgementOfWisdom": true,
+    "curseOfElements": true,
+    "curseOfRecklessness": true,
+    "faerieFire": true,
+    "exposeArmor": true,
+    "sunderArmor": true
+  },
+  "individual_buffs": {
+    "greaterBlessingOfKings": true,
+    "greaterBlessingOfMight": 1,
+    "greaterBlessingOfWisdom": 1
+  },
+  "consumables": {
+    "flaskId": 13512,
+    "foodId": 13933,
+    "conjuredId": 12662,
+    "mhImbueId": 3824,
+    "extraIds": [
+      8410,
+      10646,
+      12217,
+      18269,
+      12460
+    ],
+    "elixirIds": [
+      21546,
+      13452,
+      250329,
+      13454,
+      250341,
+      9206
+    ],
+    "resourcePotId": 13444,
+    "offensivePotId": 250937
+  },
+  "target_gear": {
+    "items": [
+      {
+        "id": 12640,
+        "enchant": 2543
+      },
+      {
+        "id": 22150,
+        "enchant": 904
+      },
+      {
+        "id": 14503
+      },
+      {
+        "id": 279269,
+        "enchant": 849
+      },
+      {
+        "id": 252484,
+        "enchant": 1891
+      },
+      {
+        "id": 21184,
+        "enchant": 2566
+      },
+      {
+        "id": 19049,
+        "enchant": 8206
+      },
+      {
+        "id": 19044
+      },
+      {
+        "id": 22385,
+        "enchant": 2543
+      },
+      {
+        "id": 275618,
+        "enchant": 1887
+      },
+      {
+        "id": 21182
+      },
+      {
+        "id": 19325
+      },
+      {
+        "id": 274759
+      },
+      {
+        "id": 272437
+      },
+      {
+        "id": 12784,
+        "enchant": 1900
+      },
+      {},
+      {
+        "id": 272435
+      }
+    ]
+  },
+  "target_talents": "050250002-501-05233011201301351",
+  "minimum_melee_hit_percent": 0
+}

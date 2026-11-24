@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "channel": "beta",
+  "manifestUrl": "https://github.com/bryan970/guildsim/releases/latest/download/update.json",
+  "checkIntervalSeconds": 1800,
+  "note": "The release channel becomes live when the first verified guild release is published."
+}

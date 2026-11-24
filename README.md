@@ -4,7 +4,7 @@ WoW Forever guild addon and Windows helper, distributed separately from other pr
 
 **[Download the installer](https://github.com/bryan970/guildsim/releases/latest/download/GuildSim-Setup.exe)** · [Release notes](https://github.com/bryan970/guildsim/releases/latest)
 
-The first 0.2 guild release is being validated. Do not use the earlier 0.1 ZIP as a replacement for an existing personal Ret setup.
+Current release: **0.2.0-beta.1**. Ready for guild beta acceptance testing; Priest remains a stats planner. Use this installer instead of the earlier 0.1 ZIP.
 
 ## Install once
 
@@ -42,4 +42,3 @@ In-game guild acceptance testing is required. Native item-effect coverage is inc
 The release archive includes GuildSim source and dependency notices. Native engine: [WoWSims Forever](https://github.com/wowsims/forever), pinned to v1.0.4, commit `a8bd7fd83a3a7c5102012ed87d86a71d175b3a89`. Exporter: [WowSimsExporter](https://github.com/wowsims/exporter). Both retain their MIT notices. GuildSim-owned code is MIT licensed. GearMatic retains its own license.
 
 Not affiliated with Blizzard, WoWSims or GearMatic.
-

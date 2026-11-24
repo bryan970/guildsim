@@ -1,0 +1,618 @@
+{
+  "checked": "2026-11-19",
+  "policy": "All reputation/PvP/crafting routes considered. No cost or grind limit. Raid-only dependencies excluded. Unverified routes are included in screening and flagged for verification before target publication.",
+  "verified_routes": {
+    "19050": {
+      "where": "Meilosh, Timbermaw Hold Revered; the crafter needs the reputation and Tailoring, not the wearer.",
+      "categories": [
+        "crafted"
+      ],
+      "note": "Materials checked against the recorded non-raid route",
+      "sources": [
+        "https://www.wowhead.com/forever/guide/reputation/timbermaw-hold-quests-quartermaster-rewards",
+        "https://www.wowhead.com/forever/spell=23663/mantle-of-the-timbermaw"
+      ]
+    },
+    "18405": {
+      "where": "Pattern 18414, Knot Thimblejack's Cache in Dire Maul North; dungeon recipe, not raid-exclusive. Source tables retain legacy records.",
+      "categories": [
+        "crafted"
+      ],
+      "note": "Materials checked against the recorded non-raid route",
+      "sources": [
+        "https://www.wowhead.com/forever/item=18414/pattern-belt-of-the-archmage",
+        "https://www.wowhead.com/forever/object=179501/knot-thimblejacks-cache",
+        "https://www.wowhead.com/forever/spell=22866/belt-of-the-archmage"
+      ]
+    },
+    "252606": {
+      "where": "Pattern 252940, Spectral Researcher in Scholomance.",
+      "categories": [
+        "crafted"
+      ],
+      "note": "Materials checked against the recorded non-raid route",
+      "sources": [
+        "https://www.wowhead.com/forever/item=252940/pattern-pristine-scorpid-leggings",
+        "https://www.wowhead.com/forever/spell=1254967/pristine-scorpid-leggings",
+        "https://www.wowhead.com/forever/item=249429/pristine-scale",
+        "https://www.wowhead.com/forever/npc=249493/nightsaber-guardian"
+      ]
+    },
+    "15062": {
+      "where": "Pattern 15772, reported Un'Goro outdoor drops; source tables retain legacy records. Confirm a crafter before gathering.",
+      "categories": [
+        "crafted"
+      ],
+      "note": "Materials checked against the recorded non-raid route",
+      "sources": [
+        "https://www.wowhead.com/forever/item=15772/pattern-devilsaur-leggings",
+        "https://www.wowhead.com/forever/spell=19097/devilsaur-leggings"
+      ]
+    },
+    "15063": {
+      "where": "Pattern 15758, Nergal in Un'Goro; vendor route, not raid-exclusive.",
+      "categories": [
+        "crafted"
+      ],
+      "note": "Materials checked against the recorded non-raid route",
+      "sources": [
+        "https://www.wowhead.com/forever/item=15758/pattern-devilsaur-gauntlets",
+        "https://www.wowhead.com/forever/spell=19084/devilsaur-gauntlets"
+      ]
+    },
+    "12640": {
+      "where": "Commission an Armorsmith who knows Lionheart Helm; availability confirmed by you. Non-raid Thorium, Arcanite, Wicked Claws and gems.",
+      "categories": [
+        "crafted"
+      ],
+      "note": "Live availability confirmed by user on 2026-11-19",
+      "sources": [
+        "https://www.wowhead.com/forever/spell=16729/lionheart-helm"
+      ]
+    },
+    "19044": {
+      "where": "Might of the Timbermaw: commission a Leatherworker with the Honored Timbermaw recipe. Rugged Leather, Powerful Mojo, Living Essence, Cured Rugged Hides and Rune Thread.",
+      "categories": [
+        "crafted",
+        "reputation"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/spell=23703/might-of-the-timbermaw"
+      ]
+    },
+    "250617": {
+      "where": "Stormcarver: commission a Blacksmith with the Timbermaw Hold Revered plans from Felwood. 20 Legionite Bars, 10 Azerothium Bars, 2 Dense Grinding Stones; Fel Crystal has a Riverglades vendor route.",
+      "categories": [
+        "crafted",
+        "reputation"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=251469/plans-stormcarver",
+        "https://www.wowhead.com/forever/spell=1252366/stormcarver",
+        "https://www.wowhead.com/forever/item=248819/fel-crystal"
+      ]
+    },
+    "12784": {
+      "where": "Arcanite Reaper: commission an Axesmith. Plans from Bannok Grimaxe in Lower Blackrock Spire; 20 Arcanite Bars, 6 Enchanted Leather, 2 Dense Grinding Stones.",
+      "categories": [
+        "crafted"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/spell=16994/arcanite-reaper"
+      ]
+    },
+    "19325": {
+      "where": "Don Julio's Band \u2014 Frostwolf Clan Exalted; Jekyll Flandring/Grunnda Wolfheart, Alterac Valley quartermasters.",
+      "categories": [
+        "PvP",
+        "reputation"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=19325/don-julios-band"
+      ]
+    },
+    "21326": {
+      "where": "Defender of the Timbermaw \u2014 Timbermaw Hold Exalted; The Root of All Evil quest.",
+      "categories": [
+        "quest",
+        "reputation"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=21326/defender-of-the-timbermaw"
+      ]
+    },
+    "20481": {
+      "where": "Spitfire Bracers: Cenarion Circle recipe; commission a Leatherworker. 1 Light Silithid Carapace, 20 Silithid Chitin, 2 Essence of Fire; outdoor Silithus/material routes.",
+      "categories": [
+        "crafted",
+        "reputation"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/spell=24846/spitfire-bracers"
+      ]
+    },
+    "252486": {
+      "where": "Ironfeather Leggings \u2014 commission a Leatherworker. Pattern 252895 drops from Firebrand Invokers in Lower Blackrock Spire. Materials: 20 Rugged Leather, 120 Ironfeathers, 4 Jade, 2 Cured Rugged Hides, 4 Rune Thread, 10 Pristine Scales, 20 Fel Leather. Pristine Scale has a Riverglades vendor; Fel Leather has an outdoor Hyjal skinning route.",
+      "categories": [
+        "crafted"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=252895/pattern-ironfeather-leggings",
+        "https://www.wowhead.com/forever/spell=1255012/ironfeather-leggings"
+      ]
+    },
+    "272682": {
+      "where": "Premier High Warlord's Destroyer \u2014 Rank 14 PvP weapon; Honor vendor. Rank 14 is subject to the season's weekly progression cap, so this is a later goal, not an immediate purchase.",
+      "categories": [
+        "PvP"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=272682/premier-high-warlords-destroyer",
+        "https://www.wowhead.com/forever/guide/pvp-overview-ranking-rewards"
+      ]
+    },
+    "23203": {
+      "where": "Libram of Fervor \u2014 BoE world drop / Auction House. Reported legacy non-raid sources include level-60 outdoor mobs and Stratholme/Blackrock Spire trash; exact live Forever drop route remains unverified.",
+      "note": "Do not assume a guaranteed boss farm from the legacy world-drop table.",
+      "categories": [
+        "drop"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=23203/libram-of-fervor"
+      ]
+    },
+    "19289": {
+      "where": "Darkmoon Card: Maelstrom \u2014 collect/buy the eight Elementals cards, combine the Elementals Deck, and turn in Darkmoon Elementals Deck (7929) at the Darkmoon Faire. The Ace has dungeon/outdoor sources; confirm current card availability before buying.",
+      "note": "Simulator uses a 1-PPM carryover proc assumption; the live Forever rate is not verified. The Faire turn-in is event-dependent.",
+      "categories": [
+        "quest"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=19289/darkmoon-card-maelstrom",
+        "https://www.wowhead.com/forever/item=19268/ace-of-elementals"
+      ]
+    },
+    "22676": {
+      "where": "Outrider's Mail Leggings \u2014 Kelm Hargunth, Warsong Gulch quartermaster in the Barrens. Legacy requirement: Warsong Outriders Exalted; verify current Forever standing and Honor/mark price at the vendor.",
+      "categories": [
+        "PvP",
+        "reputation"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=22676/outriders-mail-leggings",
+        "https://metaforge.app/wow-forever/database/armor/outriders-mail-leggings"
+      ],
+      "note": "Vendor route is recorded; the Exalted requirement comes from the legacy reward route and needs an in-game Forever check."
+    },
+    "22385": {
+      "where": "Titanic Leggings \u2014 commission an Armorsmith who knows Plans: Titanic Leggings (22388), or buy the finished BoE legs. Rare world/lockbox non-raid plans routes are reported; confirm a crafter before gathering. Materials: 12 Arcanite Bars, 20 Enchanted Thorium Bars, 10 Essence of Earth, 2 Flasks of the Titans. Flask materials and its UBRS recipe have non-raid routes.",
+      "note": "Materials are non-raid. Exact live Forever plans drop source remains unverified; a reported world-drop route is not a guaranteed farm.",
+      "categories": [
+        "crafted"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=22388/plans-titanic-leggings",
+        "https://www.wowhead.com/forever/item=22385/titanic-leggings",
+        "https://www.forevertwinking.com/items/plans-titanic-leggings"
+      ]
+    },
+    "647": {
+      "where": "Destiny \u2014 BoE world drop / Auction House. The simulator records a measured 1.2-PPM proc rate; exact live drop tables are not guaranteed by this guide.",
+      "categories": [
+        "drop"
+      ],
+      "sources": [
+        "https://www.wowhead.com/forever/item=647/destiny"
+      ]
+    }
+  },
+  "excluded_raid_dependencies": {
+    "16979": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "16980": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "16982": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "16983": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "16984": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "17013": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "17014": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "17015": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "17016": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "18263": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19148": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19156": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19162": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19164": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19165": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19167": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19168": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19169": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19682": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19683": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19684": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19685": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19686": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19687": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19688": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19689": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19998": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "19999": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "20039": {
+      "reason": "Raid-derived recipe or reagent dependency (core/leather/Bloodvine/Zandalar route); excluded under your no-raid requirement"
+    },
+    "279260": {
+      "reason": "Forest Defender's Axe needs 4 Malleable Essences of Nature, obtained from disenchanting Hyjal Summit/Barrow Deeps raid gear.",
+      "sources": [
+        "https://www.wowhead.com/forever/spell=1306534/forest-defenders-axe",
+        "https://www.wowhead.com/forever/item=274030/malleable-essence-of-nature"
+      ]
+    },
+    "17111": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "17182": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "17193": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "18543": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "20622": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "20624": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "20632": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "20636": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "20639": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "21584": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "21587": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "21588": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "21594": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "21612": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "21613": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "21614": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "23058": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "19149": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "19157": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "19163": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "20380": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22191": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22194": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22195": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22196": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22197": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22652": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22654": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22655": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22658": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22660": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22661": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22662": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22663": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22664": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22665": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22666": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22669": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22670": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22671": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22756": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22757": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "22758": {
+      "reason": "Recorded Classic raid/world-boss reward or raid-reagent craft; no verified non-raid Forever replacement route."
+    },
+    "13262": {
+      "reason": "Legacy Ashbringer record; no obtainable non-raid source verified. Not a farming target."
+    },
+    "260205": {
+      "reason": "Only documented acquisition is Alliance-only quest Your Final Reward (89053); no Horde route verified. Kept out of this Horde farming target.",
+      "dependency_type": "faction",
+      "sources": [
+        "https://zephras.com/forever/enUS/quest/89053/"
+      ]
+    },
+    "18403": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        7491,
+        7496
+      ]
+    },
+    "18404": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        7491,
+        7496
+      ]
+    },
+    "18406": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        7491,
+        7496
+      ]
+    },
+    "19366": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        7782,
+        7784
+      ]
+    },
+    "19383": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        7782,
+        7784
+      ]
+    },
+    "19384": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        7782,
+        7784
+      ]
+    },
+    "19948": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8183
+      ]
+    },
+    "19949": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8183
+      ]
+    },
+    "19950": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8183
+      ]
+    },
+    "21520": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8745
+      ]
+    },
+    "21521": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8745
+      ]
+    },
+    "21522": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8745
+      ]
+    },
+    "21523": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8745
+      ]
+    },
+    "21709": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8802
+      ]
+    },
+    "21710": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8802
+      ]
+    },
+    "21712": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        8802
+      ]
+    },
+    "22347": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        9023
+      ]
+    },
+    "22348": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        9023
+      ]
+    },
+    "22377": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        9023
+      ]
+    },
+    "22378": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        9023
+      ]
+    },
+    "22379": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        9023
+      ]
+    },
+    "22380": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        9023
+      ]
+    },
+    "23206": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        9120
+      ]
+    },
+    "23207": {
+      "reason": "Reward requires a raid-boss quest turn-in; excluded from the non-raid farming plan.",
+      "dependency_type": "raid quest",
+      "quest_ids": [
+        9120
+      ]
+    }
+  }
+}
