@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "engineVersion": "v1.0.6",
-  "engineCommit": "d45287b64a140010800d631852ccc1f1a1bf91e2",
+  "engineVersion": "v1.0.7",
+  "engineCommit": "a342c253e642d98273b50ee14fff4b097e8e52bf",
   "profiles": {
     "ret": {
       "class": "paladin",

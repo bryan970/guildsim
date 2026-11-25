@@ -331,11 +331,11 @@ function ns.ClearWeapons()
     say("Weapon queue cleared. /reload to save. The standard comparison weapons remain available.")
 end
 function ns.WeaponSummary(context,result)
-    local text = {context.name, "", string.format("Baseline: %s — %.2f simulated DPS; %.1f seconds out of mana",
+    local text = {context.name, "", string.format("Baseline: %s â€” %.2f simulated DPS; %.1f seconds out of mana",
         context.baselineName,context.baselineDps,context.secondsOom),
-        string.format("Level 60 • %ds • boss level %d • %s%d iterations per weapon",result.duration,result.targetLevel,result.catalogMode and "up to " or "",result.iterations),
+        string.format("Level 60 â€¢ %ds â€¢ boss level %d â€¢ %s%d iterations per weapon",result.duration,result.targetLevel,result.catalogMode and "up to " or "",result.iterations),
         "Each row changes ONLY the weapon. The baseline weapon's enchant is applied to every candidate.",
-        "No hit-cap rebalance or other gear swaps. Speed, min/max damage and implemented effects are simulated.",
+        "Hit chance and caps are simulated for each weapon swap. Other gear stays fixed. Speed, damage and implemented effects are simulated.",
         "Close results may be statistical ties. Provisional proc rates are marked. These are model predictions, not live DPS measurements.", ""}
     if result.catalogMode then
         text[#text+1]=result.scope=="quick" and string.format("Quick pool: %d weapons / %d variants, plus matching catalog snapshot results when available.",result.catalogWeapons,result.catalogVariants)
@@ -348,7 +348,7 @@ function ns.WeaponSummary(context,result)
             row.baseline and "[baseline] " or "",row.name,row.dps,row.delta,row.percent,
             row.provisionalProc and "  [provisional proc]" or "")
         if row.sourceUnverified then text[#text+1]="    Acquisition source is unverified; this is not a confirmed farming target." end
-        text[#text+1] = string.format("    %.2fs • %.0f–%.0f base damage • mean DPS error about ±%.2f • %.1fs OOM • %d iterations",
+        text[#text+1] = string.format("    %.2fs â€¢ %.0fâ€“%.0f base damage â€¢ mean DPS error about Â±%.2f â€¢ %.1fs OOM â€¢ %d iterations",
             row.speed,row.damageMin,row.damageMax,row.meanError95,row.secondsOom,row.iterations or result.iterations)
     end
     if #context.errors > 0 then
@@ -371,7 +371,7 @@ function ns.ShowResults()
         window:EnableMouse(true);window:SetMovable(true);window:RegisterForDrag("LeftButton")
         window:SetScript("OnDragStart",window.StartMoving);window:SetScript("OnDragStop",window.StopMovingOrSizing)
         local close=CreateFrame("Button",nil,window,"UIPanelCloseButton");close:SetPoint("TOPRIGHT",-5,-5)
-        local title=window:CreateFontString(nil,"OVERLAY","GameFontNormalLarge");title:SetPoint("TOPLEFT",24,-24);title:SetText("Ret Sim — full weapon comparisons")
+        local title=window:CreateFontString(nil,"OVERLAY","GameFontNormalLarge");title:SetPoint("TOPLEFT",24,-24);title:SetText("Ret Sim â€” full weapon comparisons")
         local controls=CreateFrame("Button",nil,window,"UIPanelButtonTemplate");controls:SetSize(150,25);controls:SetPoint("TOPRIGHT",-46,-55);controls:SetText("Sim controls");controls:SetScript("OnClick",function()ns.ShowProgress()end)
         for i, data in ipairs({{"equipped","Exported gear at level 60"},{"target","Final planning set"}}) do
             local key=data[1]
@@ -416,7 +416,7 @@ local function tooltip(tip)
         end
         return
     end
-    tip:AddLine("Full weapon sim — level 60",0.3,0.85,1)
+    tip:AddLine("Full weapon sim â€” level 60",0.3,0.85,1)
     if result.comparisonLabel then tip:AddLine(result.comparisonLabel.."; reference catalog DPS.",0.7,0.85,1,true) end
     tip:AddLine(string.format("%+.2f DPS (%+.2f%%) vs %s",row.delta,row.percent,context.baselineName),0.7,0.9,1,true)
     tip:AddLine(context.key=="target" and "Final planning set" or (result.exportedLevel<60 and "Exported gear projected to 60" or "Exported level-60 gear"),0.8,0.8,0.8,true)
@@ -426,9 +426,9 @@ local function tooltip(tip)
         if missing then tip:AddLine("Partial model; no upgrade arrow. WoWSims missing: "..missing,1,0.75,0.3,true) end
         if conditions then tip:AddLine(conditions,0.8,0.8,0.8,true) end
     end
-    if row.pairedError95 then tip:AddLine(string.format("WoWSims bulk: swap DPS error ±%.2f (95%%)",row.pairedError95),0.7,0.85,1,true) end
+    if row.pairedError95 then tip:AddLine(string.format("WoWSims bulk: swap DPS error Â±%.2f (95%%)",row.pairedError95),0.7,0.85,1,true) end
     if row.uncertain then tip:AddLine("Difference is within estimated simulation sampling error.",1,0.75,0.3,true) end
-    tip:AddLine("/guildsim results — setup and full comparisons",0.8,0.8,0.8)
+    tip:AddLine("/guildsim results â€” setup and full comparisons",0.8,0.8,0.8)
 end
 if TooltipDataProcessor and TooltipDataProcessor.AddTooltipPostCall and Enum and Enum.TooltipDataType then
     TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item,function(t)pcall(tooltip,t)end)

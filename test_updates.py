@@ -18,7 +18,7 @@ class UpdateTests(unittest.TestCase):
     def test_upstream_check_is_cached_metadata_only(self):
         calls=[]
         def fetch(url,limit):
-            calls.append(url);return b'{"tag_name":"v1.0.7","draft":false,"prerelease":false}'
+            calls.append(url);return b'{"tag_name":"v1.0.8","draft":false,"prerelease":false}'
         first=u.upstream_release(h.BASE,self.state,fetcher=fetch,now=100000)
         self.assertTrue(first['newer']);self.assertEqual(first['installed'],h.ENGINE_VERSION)
         second=u.upstream_release(h.BASE,self.state,fetcher=fetch,now=100001)
@@ -63,6 +63,28 @@ class UpdateTests(unittest.TestCase):
         target=u.stage(data,raw,sig,h.BASE,self.state,lambda url,limit:content,False)
         self.assertEqual(h.read_json(target/'manifest.json')['version'],data['version'])
         self.assertEqual(h.read_json(self.state/'pending-update.json')['sequence'],3)
+        self.assertEqual(u.pending_target(h.BASE,self.state),target)
+    def test_pending_update_recovers_offline_without_download(self):
+        content,data,raw,sig=self.package()
+        target=u.stage(data,raw,sig,h.BASE,self.state,lambda *a:content,False)
+        with patch('updates.fetch',side_effect=AssertionError('Must reuse the verified staged release')):
+            self.assertEqual(u.pending_target(h.BASE,self.state),target)
+    def test_pending_marker_needs_signed_proof(self):
+        h.save(self.state/'pending-update.json',{'version':'0.2.1-beta.1','sequence':3})
+        self.assertIsNone(u.pending_target(h.BASE,self.state))
+    def test_tampered_pending_marker_and_signature_are_rejected(self):
+        content,data,raw,sig=self.package();u.stage(data,raw,sig,h.BASE,self.state,lambda *a:content,False)
+        h.save(self.state/'pending-update.json',{'version':data['version'],'sequence':4})
+        with self.assertRaisesRegex(ValueError,'match signed'):u.pending_target(h.BASE,self.state)
+        h.save(self.state/'pending-update.json',{'version':data['version'],'sequence':3})
+        (self.state/'verified-updates'/(data['version']+'.sig')).write_bytes(b'bad')
+        with self.assertRaisesRegex(ValueError,'signature'):u.pending_target(h.BASE,self.state)
+    def test_pending_update_cannot_traverse_or_recover_corrupt_release(self):
+        h.save(self.state/'pending-update.json',{'version':'../../bad','sequence':3})
+        with self.assertRaisesRegex(ValueError,'version'):u.pending_target(h.BASE,self.state)
+        content,data,raw,sig=self.package();target=u.stage(data,raw,sig,h.BASE,self.state,lambda *a:content,False)
+        (target/'guildsim-engine.exe').write_bytes(b'corrupt')
+        with self.assertRaises(ValueError):u.pending_target(h.BASE,self.state)
     def test_corrupt_download_preserves_current_version(self):
         content,data,raw,sig=self.package();h.save(self.state/'active.json',{'version':h.VERSION})
         with self.assertRaisesRegex(ValueError,'checksum'):u.stage(data,raw,sig,h.BASE,self.state,lambda url,limit:content+b'bad',False)

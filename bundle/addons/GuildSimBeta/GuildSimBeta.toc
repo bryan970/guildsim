@@ -1,7 +1,7 @@
 ## Interface: 16001
 ## Title: GuildSim Beta
 ## Notes: Native Ret and Discipline simulations, gear catalogs, GearMatic integration, weapon enchants, trinket pairs and encounter library.
-## Version: 0.2.0-beta.5
+## Version: 0.2.0-beta.6
 ## Dependencies: WowSimsExporter
 ## OptionalDeps: GearMatic, RetSimBridge
 ## SavedVariables: GuildSimBetaDB

@@ -1,6 +1,6 @@
 GuildSim healing backend — 24 November 2026
 
-Discipline now runs native healing fights using WoWSims Forever v1.0.6
+Discipline now runs native healing fights using WoWSims Forever v1.0.7
 spell, talent, racial, mana and item mechanics, plus GuildSim's own declared
 friendly-damage assignments and casting policy. Source is included.
 

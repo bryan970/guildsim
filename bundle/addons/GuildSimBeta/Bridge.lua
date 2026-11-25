@@ -65,7 +65,7 @@ local function apply(planning,explicit)
         local verified, problem = ns.VerifyWeights(p)
         if not verified then say("Import needs attention: " .. problem); return end
     end
-    say((p.mode == "planning" and "PLANNING " or "") .. "weights imported. " .. p.scenario .. ". Caps do not update imported weights automatically.")
+    say((p.mode == "planning" and "PLANNING " or "") .. "weights imported. " .. p.scenario .. ". Full sims include hit caps; imported GearMatic weights stay fixed until Update sims.")
 end
 SLASH_GUILDSIMRETBRIDGE1 = "/guildsim"
 SlashCmdList.GUILDSIMRETBRIDGE = function(arg)
@@ -173,7 +173,7 @@ function ns.ShowFarm()
         f:SetScript("OnDragStart", f.StartMoving); f:SetScript("OnDragStop", f.StopMovingOrSizing)
         local close = CreateFrame("Button", nil, f, "UIPanelCloseButton"); close:SetPoint("TOPRIGHT", -5, -5)
         local title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge"); title:SetPoint("TOPLEFT", 24, -22)
-        title:SetText("Ret60 Unsealed Wrath — farming targets")
+        title:SetText("Ret60 Unsealed Wrath â€” farming targets")
         local desc = f:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall"); desc:SetPoint("TOPLEFT", 24, -50); desc:SetWidth(745); desc:SetJustifyH("LEFT")
         desc:SetText("Horde pre-raid plan. Priority 1 = convenient early targets; 3 = longer or expensive goals.\nHover for item stats and GearMatic scoring. Ownership includes equipped items, bags and cached bank.")
         f.rows = {}

@@ -132,7 +132,25 @@ def stage(data,raw,signature,base,state,transport=fetch,healthcheck=True):
         if target.exists():
             verify_directory(target,data['version'])
         else:extracted.rename(target)
+    proofs=state/'verified-updates';proofs.mkdir(exist_ok=True)
+    for suffix,content in (('.json',raw),('.sig',signature)):
+        path=proofs/(data['version']+suffix);temporary=path.with_name(path.name+'.'+uuid.uuid4().hex+'.tmp')
+        temporary.write_bytes(content);os.replace(temporary,path)
     h.save(state/'pending-update.json',{'version':data['version'],'sequence':data['sequence'],'created':time.time()})
+    return target
+
+def pending_target(base=None,state=None):
+    """Recover an authenticated staged update after a helper restart, without a download."""
+    base=base or h.BASE;state=state or h.STATE
+    pending=h.read_json(state/'pending-update.json',{});version=str(pending.get('version',''))
+    if not version:return None
+    if not VERSION.fullmatch(version):raise ValueError('Invalid pending update version')
+    if version==h.VERSION or version==h.read_json(state/'active.json',{}).get('failedVersion'):return None
+    proofs=state/'verified-updates';raw=proofs/(version+'.json');signature=proofs/(version+'.sig')
+    if not raw.is_file() or not signature.is_file():return None
+    data=metadata(raw.read_bytes(),signature.read_bytes(),base,state)
+    if data['version']!=version or data['sequence']!=pending.get('sequence'):raise ValueError('Pending update does not match signed metadata')
+    target=state/'releases'/version;verify_directory(target,version)
     return target
 
 def check(base=None,state=None,transport=fetch):

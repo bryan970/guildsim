@@ -2,16 +2,16 @@
 
 WoW Forever guild addon and Windows helper, distributed separately from other projects on this account.
 
-**[Download the installer](https://github.com/bryan970/guildsim/releases/latest/download/GuildSim-Setup.exe)** Â· [Release notes](https://github.com/bryan970/guildsim/releases/latest)
+**[Download the installer](https://github.com/bryan970/guildsim/releases/latest/download/GuildSim-Setup.exe)** Ã‚Â· [Release notes](https://github.com/bryan970/guildsim/releases/latest)
 
-Current release: **0.2.0-beta.5**. Ret and Discipline healing assignments are ready for guild beta acceptance testing. Use this installer instead of the earlier ZIPs.
+Current release: **0.2.0-beta.6**. Ret and Discipline healing assignments are ready for guild beta acceptance testing. Use this installer instead of the earlier ZIPs.
 
 ## Install once
 
 1. Ret users: install [GearMatic](https://www.curseforge.com/wow/addons/gearmatic) first. GuildSim preserves it.
 2. Run **GuildSim-Setup.exe**. No Python, compiler, admin account or GitHub account is required.
 3. Close WoW once. The helper detects a standard Forever installation; otherwise select `_forever_` once.
-4. Enable **GuildSim Beta** and **WowSimsExporter**, then use `/guildsim` â†’ **Update sims** â†’ `/reload`.
+4. Enable **GuildSim Beta** and **WowSimsExporter**, then use `/guildsim` Ã¢â€ â€™ **Update sims** Ã¢â€ â€™ `/reload`.
 5. Keep playing while the helper runs. Reload again when results are ready.
 
 The helper can start with Windows. Closing its window leaves it running; reopen the GuildSim shortcut for progress or use **Quit helper** to stop it.
@@ -33,7 +33,7 @@ Priests choose **Group healing**, **Tank healing**, or **Burst recovery**, and a
 
 Useful HPS is effective healing plus shields actually consumed by damage. Overhealing and unused shields earn no score. Results meeting 99% assignment survival rank first; otherwise survival ranks before HPS. Hover for mana reserve, effective healing, absorbs, overhealing, and sampling margins. Small HPS differences are marked as ties. Native item effects and set bonuses apply; missing effects remain labelled.
 
-The declared assignment has four recipients with 18,000 health. Group damage averages 800 total post-mitigation damage per second, tank damage focuses 700 per second on one recipient, and burst damage uses a documented twelve-second pulse pattern around the group workload. One-second damage rolls vary by Â±20%. Native highest available ranks and affordable lower-rank fallbacks follow Shield, Penance, Renew, Greater Heal, Flash Heal and Heal priorities with health-deficit thresholds. Native mana/item cooldown conditions apply. Baseline support includes intellect, stamina, spirit, Mark, Moonkin Aura, Kings, Wisdom, Mana Spring and Concentration; consumables are Distilled Wisdom, Nightfin Soup and Major Mana Potion. No Atiesh or external Innervate/Mana Tide is assumed. `scenario.json` in local data can explicitly override buffs and consumes.
+The declared assignment has four recipients with 18,000 health. Group damage averages 800 total post-mitigation damage per second, tank damage focuses 700 per second on one recipient, and burst damage uses a documented twelve-second pulse pattern around the group workload. One-second damage rolls vary by Ã‚Â±20%. Native highest available ranks and affordable lower-rank fallbacks follow Shield, Penance, Renew, Greater Heal, Flash Heal and Heal priorities with health-deficit thresholds. Native mana/item cooldown conditions apply. Baseline support includes intellect, stamina, spirit, Mark, Moonkin Aura, Kings, Wisdom, Mana Spring and Concentration; consumables are Distilled Wisdom, Nightfin Soup and Major Mana Potion. No Atiesh or external Innervate/Mana Tide is assumed. `scenario.json` in local data can explicitly override buffs and consumes.
 
 This is GuildSim's own native assignment host, using the pinned WoWSims spell, talent, racial, mana and item mechanics. KFC's published assignment comparisons informed the assessment of the required metrics; no KFC code, service or account is embedded or required.
 
@@ -47,12 +47,12 @@ In-game guild acceptance testing is required. Native item-effect coverage is inc
 
 ## Source and credits
 
-The release archive includes GuildSim source and dependency notices. Native engine: [WoWSims Forever](https://github.com/wowsims/forever), pinned to v1.0.6, commit `d45287b64a140010800d631852ccc1f1a1bf91e2`, with an additive GuildSim initialization hook for friendly assignments. Existing native spell mechanics and Ret entry points are unchanged. Exporter: [WowSimsExporter](https://github.com/wowsims/exporter). Both retain their MIT notices. GuildSim-owned code is MIT licensed. GearMatic retains its own license.
+The release archive includes GuildSim source and dependency notices. Native engine: [WoWSims Forever](https://github.com/wowsims/forever), pinned to v1.0.7, commit `a342c253e642d98273b50ee14fff4b097e8e52bf`, with an additive GuildSim initialization hook for friendly assignments. Existing native spell mechanics and Ret entry points are unchanged. Exporter: [WowSimsExporter](https://github.com/wowsims/exporter). Both retain their MIT notices. GuildSim-owned code is MIT licensed. GearMatic retains its own license.
 
 Not affiliated with Blizzard, WoWSims or GearMatic.
 # Engine release checks
 
-GuildSim beta 5 includes WoWSims Forever v1.0.6. The helper checks the official upstream release metadata every six hours and shows whether the bundled engine is current. An unavailable check leaves simulations and signed GuildSim updates working. No character data is sent.
+GuildSim beta 6 includes WoWSims Forever v1.0.7. The helper checks the official upstream release metadata every six hours and shows whether the bundled engine is current. An unavailable check leaves simulations and signed GuildSim updates working. No character data is sent.
 
 The repository also checks upstream daily and when its engine pin changes. A newer release opens or updates one maintenance issue; updating the bundled pin closes it. Engine changes are rebuilt and tested before they enter the signed GuildSim update channel. Guildmates do not need a compiler or a separate engine download.
 
@@ -63,3 +63,5 @@ Weapon results invalidated by a gear or talent change remain listed as saved res
 Full fight comparisons include melee hit, misses and the cap. The login audit warning about linear item scores concerns imported GearMatic weights: those fixed weights do not recompute when another gear swap crosses a cap. Use the GuildSim full comparison for cap-sensitive choices and update weights after changing gear.
 
 The native Ret regression test fixes every other input and checks 0%, 4%, 8% and 12% melee hit against a level-63 boss from behind. Over 1,000 fights, miss totals fall to zero at 8%; DPS at 8% and 12% is identical with the fixed seed. Run `go test -tags with_db ./ret -run TestNativeRetMeleeHit -v` from `engine`.
+
+Staged updates now retain their signed metadata and can be recovered after restarting the helper without downloading again. Recovery rechecks the signature, release integrity and anti-rollback sequence; activation still waits for WoW to close and simulations to become idle. Old staged markers without signed proof are revalidated through the normal update feed.

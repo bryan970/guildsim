@@ -58,7 +58,7 @@ end
 local function payload()return ns.results and ns.results[UnitGUID("player")]end
 local function fresh(p)
  if not p or p.guid~=UnitGUID("player")then return false,"No results for this character. Update sims to begin."end
- if p.version~="0.2.0-beta.5" then return false,"Results are from another beta version. Update sims." end
+ if p.version~="0.2.0-beta.6" then return false,"Results are from another beta version. Update sims." end
  if time()-(p.generated or 0)>86400 then return false,"Results are over 24 hours old. Update sims."end
  local state=db()
  if (p.mobType or 0)~=(state.mobType or 0)or(p.creatureFamily or 0)~=(state.creatureFamily or 0)then return false,"Encounter changed. Update sims for this target."end

@@ -25,9 +25,9 @@ import uuid
 
 from lua_data import loads, saved_characters
 
-VERSION = '0.2.0-beta.5'
-ENGINE_VERSION = 'v1.0.6'
-ENGINE_COMMIT = 'd45287b64a140010800d631852ccc1f1a1bf91e2'
+VERSION = '0.2.0-beta.6'
+ENGINE_VERSION = 'v1.0.7'
+ENGINE_COMMIT = 'a342c253e642d98273b50ee14fff4b097e8e52bf'
 BASE = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent / 'bundle'
 STATE = Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / 'GuildSimBeta'
 PROFILES = {'ret': 'Retribution â€” native DPS', 'disc-raid': 'Discipline â€” native healing assignments'}
@@ -480,6 +480,7 @@ class App:
         self.seen={}
         self.last_update_check=0
         self.pending_update=None;self.job_ok=False
+        self.last_pending_stamp=None
         self.pending_install=False
         self.rollback_required=bool(read_json(STATE/'active.json',{}).get('failedVersion'))
 
@@ -564,6 +565,14 @@ class App:
     def poll(self):
         import updates
         updates.finish_launcher_update(STATE)
+        if not self.pending_update:
+            try:
+                marker=STATE/'pending-update.json';stamp=marker.stat().st_mtime_ns if marker.exists() else None
+                if stamp!=self.last_pending_stamp:
+                    self.last_pending_stamp=stamp
+                    target=updates.pending_target()
+                    if target:self.events.put(('update',str(target)))
+            except Exception as e:self.status.set('Staged update needs attention: '+str(e))
         while not self.events.empty():
             message=self.events.get()
             if message is None:

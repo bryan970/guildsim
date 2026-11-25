@@ -208,7 +208,7 @@ function ns.Audit()
     local ok, why = ns.VerifyWeights()
     print("|cffead36cRet Sim audit:|r " .. (ok and "PASS: " or "CHECK: ") .. why)
     local p = ns.SelectedWeightPayload()
-    if p then print("Ret Sim: " .. p.mode .. "; run " .. tostring(p.runId):sub(1,12) .. ". Linear item scores do not enforce hit caps or simulate whole sets.") end
+    if p then print("Ret Sim: " .. p.mode .. "; run " .. tostring(p.runId):sub(1,12) .. ". Full fight sims include hit and misses. Imported GearMatic item weights are fixed; update sims after gear changes.") end
     local key = gm.Compat.CurrentCharKey and gm.Compat.CurrentCharKey()
     local actual = si and si.GetActiveScale and key and si.GetActiveScale(key)
     if actual and actual.weights then
