@@ -65,6 +65,13 @@ class RuntimeTests(unittest.TestCase):
         (work/'addon/Weights.lua').write_text('local _,ns=...\nns.payload={guid="Player-PUBLIC"}\n',encoding='utf-8')
         addon=self.game/'Interface/AddOns/GuildSimBeta';r.publish_profiles(work,self.entry,h.BASE,self.state,addon)
         text=(addon/'Profiles.lua').read_text(encoding='utf-8');self.assertIn('function load(...)',text);self.assertIn('UnitGUID("player")=="Player-PUBLIC"',text)
+    def test_empty_profile_template_cannot_clear_loaded_weights(self):
+        work=r.bootstrap(self.entry,self.settings,h.BASE,self.state)
+        (work/'addon/Weights.lua').write_text('local _,ns=...\nns.payload = nil\n',encoding='utf-8')
+        (work/'addon/WeaponResults.lua').write_text('local _,ns=...\nns.weaponResults={guid="Player-PUBLIC"}\n',encoding='utf-8')
+        addon=self.game/'Interface/AddOns/GuildSimBeta';r.publish_profiles(work,self.entry,h.BASE,self.state,addon)
+        text=(addon/'Profiles.lua').read_text(encoding='utf-8')
+        self.assertNotIn('ns.payload = nil',text);self.assertIn('ns.weaponResults=',text)
     def test_handoff_does_not_interrupt_open_game(self):
         with patch('helper.game_running',return_value=True):
             ok,message=r.finish_migration(self.root/'legacy',self.game,self.state)

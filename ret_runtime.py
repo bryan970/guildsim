@@ -2,6 +2,7 @@
 import copy
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -45,7 +46,12 @@ def publish_profiles(work,entry,base,state,addon):
     segments=[]
     for name in DATA_FILES:
         file=work/'addon'/name
-        if file.exists():segments.append(file.read_text(encoding='utf-8'))
+        if file.exists():
+            content=file.read_text(encoding='utf-8')
+            # Empty release templates must not erase a valid standalone payload
+            # loaded earlier by the TOC while a character's first job starts.
+            if re.search(r'\bns\.(?:payload|targetWeights|weaponResults|itemResults)\s*=\s*nil\s*$',content):continue
+            segments.append(content)
     if not segments:return
     guid=entry['character']['id']
     h.atomic(root/(h.digest(guid)+'.lua'),'do local function load(...)\n'+'\n'.join(segments)+'\nend\nif UnitGUID("player")=='+h.lua(guid)+' then load(addonName,namespace) end\nend\n')

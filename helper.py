@@ -25,7 +25,7 @@ import uuid
 
 from lua_data import loads, saved_characters
 
-VERSION = '0.2.0-beta.2'
+VERSION = '0.2.0-beta.3'
 ENGINE_COMMIT = 'a8bd7fd83a3a7c5102012ed87d86a71d175b3a89'
 BASE = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent / 'bundle'
 STATE = Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / 'GuildSimBeta'

@@ -322,6 +322,8 @@ def run(config,force=False,publish=True,iterations=None):
     installed_weights=Path(config['bridge_directory'])/'Weights.lua'
     installed_matches=installed_weights.exists() and previous.get('payloadHash')==digest(installed_weights.read_bytes())
     if not force and previous.get('fingerprint')==fingerprint and (not publish or (previous.get('published') and installed_matches)):
+        if publish:
+            atomic(BASE/'addon/Weights.lua',installed_weights.read_text(encoding='utf-8'))
         print('Gear, talents and scenario unchanged. Existing results are still current.'); return False
     out=BASE/'output';out.mkdir(exist_ok=True)
     atomic(out/'character.json',json.dumps(native_character(c),ensure_ascii=False,indent=2))
@@ -364,6 +366,7 @@ def run(config,force=False,publish=True,iterations=None):
         if not (destination/'GuildSimBeta.toc').is_file(): raise ValueError('Bridge addon is not installed; no weights published.')
         payload=bridge_payload(result,record,c,scale,fingerprint)
         atomic(destination/'Weights.lua',payload)
+        atomic(BASE/'addon/Weights.lua',payload)
         payload_hash=digest((destination/'Weights.lua').read_bytes())
     os.replace(pending,out/'result.json')
     atomic(out/'gearmatic-pawn.txt',scale+'\n')
