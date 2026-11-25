@@ -58,7 +58,7 @@ end
 local function payload()return ns.results and ns.results[UnitGUID("player")]end
 local function fresh(p)
  if not p or p.guid~=UnitGUID("player")then return false,"No results for this character. Update sims to begin."end
- if p.version~="0.2.0-beta.4" then return false,"Results are from another beta version. Update sims." end
+ if p.version~="0.2.0-beta.5" then return false,"Results are from another beta version. Update sims." end
  if time()-(p.generated or 0)>86400 then return false,"Results are over 24 hours old. Update sims."end
  local state=db()
  if (p.mobType or 0)~=(state.mobType or 0)or(p.creatureFamily or 0)~=(state.creatureFamily or 0)then return false,"Encounter changed. Update sims for this target."end
@@ -205,7 +205,7 @@ render=function()
  end
  browser.empty:SetText(not valid and why or(#rows==0 and"No comparisons in this view. Capture bags or enable the full catalog in the helper."or""))
  browser.count:SetText(string.format("%d results · Page %d / %d",#rows,page,pages)..(p and not p.complete and" · Still simulating"or""))
- browser.footer:SetText("WoWSims Forever v1.0.4 · "..(healing and"Declared assignment · 99% survival gate, then useful HPS. Hover for mana, overhealing, sampling and model details."or priest and"Older stats result: update sims for native healing comparisons."or"DPS varies with race, talents, buffs and target. Small gains can fall within sampling error."))
+ browser.footer:SetText("WoWSims Forever v1.0.5 · "..(healing and"Declared assignment · 99% survival gate, then useful HPS. Hover for mana, overhealing, sampling and model details."or priest and"Older stats result: update sims for native healing comparisons."or"DPS varies with race, talents, buffs and target. Small gains can fall within sampling error."))
 end
 local function show()
  build();docked=false;panel:Show();browser:Show();render()

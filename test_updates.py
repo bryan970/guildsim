@@ -15,6 +15,24 @@ import updates as u
 HERE=Path(__file__).parent
 
 class UpdateTests(unittest.TestCase):
+    def test_upstream_check_is_cached_metadata_only(self):
+        calls=[]
+        def fetch(url,limit):
+            calls.append(url);return b'{"tag_name":"v1.0.7","draft":false,"prerelease":false}'
+        first=u.upstream_release(h.BASE,self.state,fetcher=fetch,now=100000)
+        self.assertTrue(first['newer']);self.assertEqual(first['installed'],h.ENGINE_VERSION)
+        second=u.upstream_release(h.BASE,self.state,fetcher=fetch,now=100001)
+        self.assertEqual(first,second);self.assertEqual(len(calls),1)
+        self.assertFalse((self.state/'pending-update.json').exists())
+    def test_upstream_failure_does_not_disrupt_signed_updates(self):
+        result=u.upstream_release(h.BASE,self.state,fetcher=lambda *a:b'not json',now=100000)
+        self.assertEqual(result['status'],'unavailable')
+    def test_upstream_numeric_order_and_invalid_tags(self):
+        for tag,newer in [('v1.0.10',True),('v1.0.4',False),('v1.0.5',False)]:
+            result=u.upstream_release(h.BASE,self.state,force=True,fetcher=lambda *a:json.dumps({'tag_name':tag}).encode(),now=100000)
+            self.assertEqual(result['newer'],newer)
+        result=u.upstream_release(h.BASE,self.state,force=True,fetcher=lambda *a:b'{"tag_name":"../../bad"}',now=100000)
+        self.assertEqual(result['status'],'unavailable')
     def setUp(self):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name);self.state=self.root/'state';self.state.mkdir()
     def tearDown(self):self.tmp.cleanup()

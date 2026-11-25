@@ -19,6 +19,7 @@ import helper as h
 
 MAX_DOWNLOAD=256*1024*1024
 MAX_EXPANDED=512*1024*1024
+UPSTREAM_URL='https://api.github.com/repos/wowsims/forever/releases/latest'
 RESERVED={'con','prn','aux','nul'}|{'com'+str(i) for i in range(1,10)}|{'lpt'+str(i) for i in range(1,10)}
 VERSION=re.compile(r'^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?$')
 
@@ -36,6 +37,24 @@ def fetch(url,limit):
         data=response.read(limit+1)
         if len(data)>limit:raise ValueError('Release download exceeds its limit')
         return data
+
+def upstream_release(base=None,state=None,force=False,fetcher=None,now=None):
+    """Check release metadata only; activation still requires a signed GuildSim build."""
+    base=base or h.BASE;state=state or h.STATE;now=time.time() if now is None else now
+    path=state/'engine-release-check.json';previous=h.read_json(path,{})
+    if not force and now-previous.get('checkedAt',0)<21600:return previous
+    installed=h.read_json(base/'manifest.json',{}).get('engineVersion',h.ENGINE_VERSION)
+    try:
+        data=json.loads((fetcher or fetch)(UPSTREAM_URL,256*1024))
+        tag=data.get('tag_name','')
+        if not re.fullmatch(r'v\d+\.\d+\.\d+',tag) or data.get('draft') or data.get('prerelease'):
+            raise ValueError('Unexpected upstream release metadata')
+        url='https://github.com/wowsims/forever/releases/tag/'+tag
+        newer=tuple(map(int,tag[1:].split('.')))>tuple(map(int,installed.lstrip('v').split('.')))
+        result={'checkedAt':now,'installed':installed,'latest':tag,'newer':newer,'url':url,'status':'ok'}
+    except Exception:
+        result=dict(previous,checkedAt=now,status='unavailable',installed=installed)
+    h.save(path,result);return result
 
 def verify_signature(raw,signature,base):
     launcher=base/'GuildSim Launcher.exe'

@@ -29,6 +29,8 @@ def run():
     source=RELEASE/'source';(source/'engine').mkdir(parents=True,exist_ok=True)
     for name in ('helper.py','lua_data.py','ret_runtime.py','updates.py'):
         shutil.copy2(HERE/name,source/name)
+    for path in HERE.glob('test_*.py'):shutil.copy2(path,source/path.name)
+    shutil.copytree(HERE/'.github',source/'.github',dirs_exist_ok=True)
     shutil.copy2(HERE/'engine/main.go',source/'engine/main.go')
     for folder in ('ret','bulk','launcher','setup','trust','signrelease','healsim','patches'):
         shutil.copytree(HERE/'engine'/folder,source/'engine'/folder,dirs_exist_ok=True,ignore=shutil.ignore_patterns('payload.zip','update.json','update.json.sig'))
@@ -57,7 +59,7 @@ def run():
         if p.exists():shutil.copy2(p,licenses/(label+'.txt'))
     boot=HERE.parent/'guild-build-venv/Lib/site-packages/pyinstaller-6.22.3.dist-info/licenses/COPYING.txt'
     if boot.exists():shutil.copy2(boot,licenses/'PyInstaller.txt')
-    (licenses/'NOTICE.txt').write_text('Bundled components\n\nWoWSims Forever v1.0.4 (MIT), commit a8bd7fd83a3a7c5102012ed87d86a71d175b3a89.\nWowSimsExporter v3.2.11 (MIT); embedded libraries retain notices in addon/Libs.\nCPython 3.13.3 (PSF and included third-party licenses).\nTcl/Tk 8.6.15 (notices included in Python.txt and Tk.txt).\nOpenSSL 3.0.16 (Apache 2.0 terms included in Python.txt).\nGo 1.27.4 runtime (BSD). Google Protobuf v1.36.12 (BSD).\nPyInstaller 6.22.3 bootloader (GPL with distribution exception; PyInstaller.txt).\n',encoding='utf-8')
+    (licenses/'NOTICE.txt').write_text('Bundled components\n\nWoWSims Forever v1.0.6 (MIT), commit d45287b64a140010800d631852ccc1f1a1bf91e2.\nWowSimsExporter v3.2.11 (MIT); embedded libraries retain notices in addon/Libs.\nCPython 3.13.3 (PSF and included third-party licenses).\nTcl/Tk 8.6.15 (notices included in Python.txt and Tk.txt).\nOpenSSL 3.0.16 (Apache 2.0 terms included in Python.txt).\nGo 1.27.4 runtime (BSD). Google Protobuf v1.36.12 (BSD).\nPyInstaller 6.22.3 bootloader (GPL with distribution exception; PyInstaller.txt).\n',encoding='utf-8')
     sums=RELEASE/'SHA256SUMS.txt'
     sums.unlink(missing_ok=True)
     manifest(RELEASE)

@@ -4,7 +4,7 @@ WoW Forever guild addon and Windows helper, distributed separately from other pr
 
 **[Download the installer](https://github.com/bryan970/guildsim/releases/latest/download/GuildSim-Setup.exe)** · [Release notes](https://github.com/bryan970/guildsim/releases/latest)
 
-Current release: **0.2.0-beta.4**. Ret and Discipline healing assignments are ready for guild beta acceptance testing. Use this installer instead of the earlier ZIPs.
+Current release: **0.2.0-beta.5**. Ret and Discipline healing assignments are ready for guild beta acceptance testing. Use this installer instead of the earlier ZIPs.
 
 ## Install once
 
@@ -47,6 +47,13 @@ In-game guild acceptance testing is required. Native item-effect coverage is inc
 
 ## Source and credits
 
-The release archive includes GuildSim source and dependency notices. Native engine: [WoWSims Forever](https://github.com/wowsims/forever), pinned to v1.0.4, commit `a8bd7fd83a3a7c5102012ed87d86a71d175b3a89`, with an additive GuildSim initialization hook for friendly assignments. Existing native spell mechanics and Ret entry points are unchanged. Exporter: [WowSimsExporter](https://github.com/wowsims/exporter). Both retain their MIT notices. GuildSim-owned code is MIT licensed. GearMatic retains its own license.
+The release archive includes GuildSim source and dependency notices. Native engine: [WoWSims Forever](https://github.com/wowsims/forever), pinned to v1.0.6, commit `d45287b64a140010800d631852ccc1f1a1bf91e2`, with an additive GuildSim initialization hook for friendly assignments. Existing native spell mechanics and Ret entry points are unchanged. Exporter: [WowSimsExporter](https://github.com/wowsims/exporter). Both retain their MIT notices. GuildSim-owned code is MIT licensed. GearMatic retains its own license.
 
 Not affiliated with Blizzard, WoWSims or GearMatic.
+# Engine release checks
+
+GuildSim beta 5 includes WoWSims Forever v1.0.6. The helper checks the official upstream release metadata every six hours and shows whether the bundled engine is current. An unavailable check leaves simulations and signed GuildSim updates working. No character data is sent.
+
+The repository also checks upstream daily and when its engine pin changes. A newer release opens or updates one maintenance issue; updating the bundled pin closes it. Engine changes are rebuilt and tested before they enter the signed GuildSim update channel. Guildmates do not need a compiler or a separate engine download.
+
+Weapon results invalidated by a gear or talent change remain listed as saved results needing an update, with DPS withheld until they match the new capture. Explicitly requested and inspected weapons are included in comparisons even when absent from the default phase catalog; unsupported variants retain an error instead of an invented score.

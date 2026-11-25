@@ -1,0 +1,54 @@
+name: Watch WoWSims engine releases
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [helper.py, .github/workflows/engine-release-watch.yml]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compare the shipped engine with the latest upstream release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+        shell: python
+        run: |
+          import base64, json, os, re, urllib.request
+          repo=os.environ['REPOSITORY']
+          def api(path, method='GET', body=None):
+              request=urllib.request.Request('https://api.github.com/'+path,
+                  data=json.dumps(body).encode() if body is not None else None,
+                  headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+                           'Accept':'application/vnd.github+json','User-Agent':'GuildSim-engine-watch'},method=method)
+              with urllib.request.urlopen(request,timeout=30) as response:
+                  return json.load(response)
+          source=api('repos/'+repo+'/contents/helper.py?ref=main')
+          text=base64.b64decode(source['content']).decode()
+          pinned=re.search(r"ENGINE_VERSION = '(v[0-9.]+)'",text).group(1)
+          release=api('repos/wowsims/forever/releases/latest')
+          latest=release['tag_name']
+          if not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+',latest) or release.get('prerelease') or release.get('draft'):
+              raise ValueError('Unexpected upstream release')
+          number=lambda value:tuple(map(int,value[1:].split('.')))
+          title='WoWSims engine update available'
+          issues=api('repos/'+repo+'/issues?state=open&per_page=100')
+          issue=next((row for row in issues if row['title']==title and 'pull_request' not in row),None)
+          if number(latest)>number(pinned):
+              body=('GuildSim ships '+pinned+'; WoWSims Forever '+latest+' is available.\n\n'
+                    +'Upstream release: https://github.com/wowsims/forever/releases/tag/'+latest+'\n\n'
+                    +'Rebuild all three native engines, refresh public data, test Ret races and Priest healing, '
+                    +'then publish a new signed GuildSim release. Helpers install that tested release automatically. '
+                    +'This check never installs untested upstream binaries.')
+              if issue:
+                  if issue.get('body')!=body:api('repos/'+repo+'/issues/'+str(issue['number']),'PATCH',{'body':body})
+              else:api('repos/'+repo+'/issues','POST',{'title':title,'body':body})
+              print('Engine upgrade needed:',pinned,'->',latest)
+          else:
+              if issue:api('repos/'+repo+'/issues/'+str(issue['number']),'PATCH',{'state':'closed'})
+              print('Engine current:',pinned)

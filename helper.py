@@ -25,11 +25,12 @@ import uuid
 
 from lua_data import loads, saved_characters
 
-VERSION = '0.2.0-beta.4'
-ENGINE_COMMIT = 'a8bd7fd83a3a7c5102012ed87d86a71d175b3a89'
+VERSION = '0.2.0-beta.5'
+ENGINE_VERSION = 'v1.0.6'
+ENGINE_COMMIT = 'd45287b64a140010800d631852ccc1f1a1bf91e2'
 BASE = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent / 'bundle'
 STATE = Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / 'GuildSimBeta'
-PROFILES = {'ret': 'Retribution — native DPS', 'disc-raid': 'Discipline — native healing assignments'}
+PROFILES = {'ret': 'Retribution â€” native DPS', 'disc-raid': 'Discipline â€” native healing assignments'}
 SLOTS = ['Head','Neck','Shoulders','Back','Chest','Wrists','Hands','Waist','Legs','Feet','Ring 1','Ring 2','Trinket 1','Trinket 2','Main hand','Off hand','Relic / wand']
 TYPES = {1:[0],2:[1],3:[2],4:[3],5:[4],6:[5],7:[6],8:[7],9:[8],10:[9],11:[10,11],12:[12,13],13:[14],14:[16]}
 UTILITY = {11122,12846}
@@ -257,7 +258,7 @@ class Runner:
     def run(self, entry, settings, notify=lambda x:None, full=False):
         root=game_root(settings['root']); addon=root/'Interface/AddOns/GuildSimBeta'
         if not (addon/'.guildsim-owned').exists(): raise ValueError('Install the beta addon first.')
-        if time.time()-entry['timestamp']>86400: raise ValueError('This character export is over 24 hours old. Use /guildsim → Update sims, then /reload in game.')
+        if time.time()-entry['timestamp']>86400: raise ValueError('This character export is over 24 hours old. Use /guildsim â†’ Update sims, then /reload in game.')
         request=sv_request(entry);char=copy.deepcopy(entry['character']);profile=profile_for(char)
         char['guildTalentSignature']=request.get('talentSignature')
         identity=digest({'account':entry['account'],'guid':char['id'],'profile':profile})
@@ -291,7 +292,7 @@ class Runner:
         jobs=candidates(entry,profile,request,self.db,refgear,full)
         cache=self.state/'cache';cache.mkdir(parents=True,exist_ok=True)
         def evaluate(req):
-            # Cache every exact request; A→B→A reuses results without mixing race, target, talents, gear or engine versions.
+            # Cache every exact request; Aâ†’Bâ†’A reuses results without mixing race, target, talents, gear or engine versions.
             key=digest({'engine':self.engine,'adapter':VERSION,'request':req})
             path=cache/(key+'.json');result=read_json(path)
             if result is None:
@@ -299,11 +300,11 @@ class Runner:
                 if result['baseline'].get('error') or result['reference'].get('error'): raise ValueError(result['baseline'].get('error') or result['reference'].get('error'))
                 save(path,result)
             return result
-        notify(f'{char.get("name")} · {PROFILES[profile]} · baseline')
+        notify(f'{char.get("name")} Â· {PROFILES[profile]} Â· baseline')
         baseline=evaluate({**base_request,'candidates':[]})
         if profile=='disc-raid':
             completed=self.healing_comparisons(addon,char,baseline,jobs,ref,mob,family,base_request,full,notify)
-            notify(f'Ready: {char.get("name")} · {len(completed)} healing comparisons. Use /reload to load results.')
+            notify(f'Ready: {char.get("name")} Â· {len(completed)} healing comparisons. Use /reload to load results.')
             return baseline,completed
         completed=[]
         published=time.monotonic()
@@ -315,12 +316,12 @@ class Runner:
             req['candidates']=[{'key':job['key'],'gear':job['gear']}]
             result=evaluate(req);completed.append({**job,**result['rows'][0]})
             if number%5==0 or number+1==len(jobs):
-                notify(f'{char.get("name")} · {number+1} / {len(jobs)} comparisons')
+                notify(f'{char.get("name")} Â· {number+1} / {len(jobs)} comparisons')
             if time.monotonic()-published>=30 or number+1==len(jobs):
                 self.publish(addon,char,profile,baseline,completed,ref,mob,family,len(jobs),number+1==len(jobs))
                 published=time.monotonic()
         if not jobs: self.publish(addon,char,profile,baseline,[],ref,mob,family,0,True)
-        notify(f'Ready: {char.get("name")} · {len(completed)} comparisons. Use /reload to load results.')
+        notify(f'Ready: {char.get("name")} Â· {len(completed)} comparisons. Use /reload to load results.')
         return baseline,completed
 
     def healing_comparisons(self,addon,char,baseline,jobs,ref,mob,family,base_request,full,notify):
@@ -357,7 +358,7 @@ class Runner:
         for start in range(0,len(jobs),16):
             if self.stop.is_set():raise InterruptedError('Paused. Completed healing batches are cached; click Run to resume.')
             chunk=jobs[start:start+16];run_batch(chunk,screen_iterations)
-            notify(f'{char.get("name")} · {min(start+16,len(jobs))} / {len(jobs)} healing comparisons · {screen_iterations} fights each')
+            notify(f'{char.get("name")} Â· {min(start+16,len(jobs))} / {len(jobs)} healing comparisons Â· {screen_iterations} fights each')
             if time.monotonic()-published>=30 or start+16>=len(jobs):publish(not full);published=time.monotonic()
         if full and screen_iterations<final_iterations:
             def score(row):
@@ -375,7 +376,7 @@ class Runner:
             for start in range(0,len(shortlist),8):
                 if self.stop.is_set():raise InterruptedError('Paused. Completed healing batches are cached; click Run to resume.')
                 run_batch(shortlist[start:start+8],final_iterations)
-                notify(f'{char.get("name")} · refine healing upgrades {min(start+8,len(shortlist))} / {len(shortlist)} · {final_iterations} fights each')
+                notify(f'{char.get("name")} Â· refine healing upgrades {min(start+8,len(shortlist))} / {len(shortlist)} Â· {final_iterations} fights each')
                 if time.monotonic()-published>=30:publish(False);published=time.monotonic()
         publish(True)
         return [rows[j['key']] for j in jobs]
@@ -431,12 +432,12 @@ class App:
         import tkinter as tk
         from tkinter import ttk, filedialog, messagebox
         self.tk=tk;self.ttk=ttk;self.dialog=filedialog;self.msg=messagebox
-        self.window=tk.Tk();self.window.title('GuildSim · Setup & comparisons');self.window.geometry('820x780');self.window.minsize(750,730)
+        self.window=tk.Tk();self.window.title('GuildSim Â· Setup & comparisons');self.window.geometry('820x780');self.window.minsize(750,730)
         style=ttk.Style();style.theme_use('clam');style.configure('.',font=('Segoe UI',10));style.configure('Title.TLabel',font=('Segoe UI Semibold',18));style.configure('TButton',padding=(12,7))
         self.settings=read_json(STATE/'settings.json',{});self.entries=[];self.busy=False;self.runner=None;self.events=queue.Queue()
         frame=ttk.Frame(self.window,padding=24);frame.pack(fill='both',expand=True)
         ttk.Label(frame,text='GuildSim Beta',style='Title.TLabel').pack(anchor='w')
-        ttk.Label(frame,text='Ret: Human · Dwarf · Undead   |   Discipline: native healing assignments',wraplength=720).pack(anchor='w',pady=(5,20))
+        ttk.Label(frame,text='Ret: Human Â· Dwarf Â· Undead   |   Discipline: native healing assignments',wraplength=720).pack(anchor='w',pady=(5,20))
         ttk.Label(frame,text='1. Choose your WoW Forever folder').pack(anchor='w')
         line=ttk.Frame(frame);line.pack(fill='x',pady=6)
         default=self.settings.get('root','')
@@ -444,14 +445,14 @@ class App:
             for guess in ('D:/World of Warcraft/_forever_','C:/World of Warcraft/_forever_','C:/Program Files (x86)/World of Warcraft/_forever_'):
                 if (Path(guess)/'Interface/AddOns').is_dir(): default=guess;break
         self.path=tk.StringVar(value=default);ttk.Entry(line,textvariable=self.path).pack(side='left',fill='x',expand=True)
-        ttk.Button(line,text='Browse…',command=self.browse).pack(side='left',padx=(8,0))
+        ttk.Button(line,text='Browseâ€¦',command=self.browse).pack(side='left',padx=(8,0))
         ttk.Button(frame,text='Install / upgrade addon',command=self.install).pack(anchor='w',pady=(2,8))
         ttk.Label(frame,text='Ret users: have GearMatic preinstalled. Its files and settings are preserved.',wraplength=720).pack(anchor='w',pady=(0,8))
         self.auto_updates=tk.BooleanVar(value=self.settings.get('auto_updates',True))
         self.startup=tk.BooleanVar(value=self.settings.get('start_with_windows',True))
         ttk.Checkbutton(frame,text='Automatically update GuildSim when WoW is closed',variable=self.auto_updates,command=self.persist_options).pack(anchor='w')
         ttk.Checkbutton(frame,text='Keep the helper running when Windows starts',variable=self.startup,command=self.persist_options).pack(anchor='w',pady=(0,10))
-        ttk.Label(frame,text='2. In game: /guildsim → Update sims → /reload').pack(anchor='w')
+        ttk.Label(frame,text='2. In game: /guildsim â†’ Update sims â†’ /reload').pack(anchor='w')
         ttk.Label(frame,text='Keep this helper open. Results need another /reload after comparisons finish.',wraplength=720).pack(anchor='w',pady=(4,8))
         line=ttk.Frame(frame);line.pack(fill='x')
         self.char=tk.StringVar();self.combo=ttk.Combobox(line,textvariable=self.char,state='readonly');self.combo.pack(side='left',fill='x',expand=True)
@@ -470,6 +471,8 @@ class App:
         ttk.Label(frame,text='Catalog: fixed reference trinkets. Pair comparisons: exported combat gear.\nDisc simulates effective healing, consumed shields, survival, overhealing and mana for the selected assignment.',wraplength=720).pack(anchor='w',pady=12)
         self.status=tk.StringVar(value='Ready to install. Your existing RetSimBridge and helper remain untouched.')
         ttk.Label(frame,textvariable=self.status,wraplength=720,foreground='#156f83').pack(anchor='w',pady=10)
+        self.engine_status=tk.StringVar(value='Simulation engine: '+ENGINE_VERSION+' · checking upstream releases automatically')
+        ttk.Label(frame,textvariable=self.engine_status,wraplength=720).pack(anchor='w')
         self.window.protocol('WM_DELETE_WINDOW',self.close);self.window.after(500,self.poll)
         self.last_job=None;self.catalog_due=None
         try: verify_bundle();self.refresh()
@@ -524,11 +527,11 @@ class App:
         try:
             self.entries=discover(self.path.get());values=[]
             for entry in self.entries:
-                c=entry['character'];values.append(f'{c.get("name")} · {c.get("realm") or "realm unspecified"} · {c.get("race")} {c.get("class")} · {entry["account"]}')
+                c=entry['character'];values.append(f'{c.get("name")} Â· {c.get("realm") or "realm unspecified"} Â· {c.get("race")} {c.get("class")} Â· {entry["account"]}')
             previous=self.char.get();self.combo['values']=values
             if previous in values:self.combo.current(values.index(previous))
             elif values:self.combo.current(0)
-            if not values:self.status.set('No supported saved characters yet. Log in, /guildsim → Update sims, then /reload and refresh.')
+            if not values:self.status.set('No supported saved characters yet. Log in, /guildsim â†’ Update sims, then /reload and refresh.')
         except Exception as e:self.status.set(str(e))
     def start(self, entry=None, full_catalog=False):
         if self.busy:return
@@ -552,7 +555,7 @@ class App:
             threading.Thread(target=work,daemon=True).start()
         except Exception as e:self.msg.showerror('Comparisons',str(e))
     def pause(self):
-        if self.runner:self.runner.stop.set();self.status.set('Pausing after the current native comparison…')
+        if self.runner:self.runner.stop.set();self.status.set('Pausing after the current native comparisonâ€¦')
     def close(self):
         self.window.withdraw()
     def quit(self):
@@ -569,6 +572,13 @@ class App:
                     self.catalog_due=(time.time()+120,self.last_job[0])
             elif isinstance(message,tuple) and message[0]=='update':
                 self.pending_update=Path(message[1]);self.status.set('Update downloaded and verified. It will install when WoW and simulations are closed.')
+            elif isinstance(message,tuple) and message[0]=='engine':
+                data=message[1]
+                text='Simulation engine: '+data['installed']
+                if data.get('status')=='unavailable':text+=' · upstream check unavailable; will retry automatically'
+                elif data.get('newer'):text+=' · '+data['latest']+' available upstream; awaiting a tested GuildSim update'
+                else:text+=' · latest upstream release'
+                self.engine_status.set(text)
             else:self.status.set(message)
         show=STATE/'show.request'
         if show.exists():show.unlink();self.window.deiconify();self.window.lift()
@@ -599,14 +609,16 @@ class App:
             except (ValueError,OSError,KeyError,IndexError,TypeError):pass
         if not self.busy and self.catalog_due and time.time()>=self.catalog_due[0]:
             _,entry=self.catalog_due;self.catalog_due=None;self.start(entry,True)
-        if self.auto_updates.get() and time.time()-self.last_update_check>1800:self.check_updates()
+        if time.time()-self.last_update_check>1800:self.check_updates(False)
         self.window.after(3000,self.poll)
-    def check_updates(self):
+    def check_updates(self,manual=True):
         self.last_update_check=time.time()
+        download=manual or self.auto_updates.get()
         def work():
             try:
                 import updates
-                target=updates.check()
+                self.events.put(('engine',updates.upstream_release(force=manual)))
+                target=updates.check() if download else None
                 if target:self.events.put(('update',str(target)))
             except Exception as e:self.events.put('Update check unavailable: '+str(e))
         threading.Thread(target=work,daemon=True).start()

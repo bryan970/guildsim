@@ -45,7 +45,7 @@ def candidates(config,character):
     pins=[]
     if saved.exists():
         data=loads(saved.read_text(encoding='utf-8-sig')).get('GuildSimBetaDB',{})
-        for group in ('manualItems','inspectedItems'):
+        for group in ('manualItems','inspectedItems','weaponQueue'):
             rows=data.get(group,{}).get(character['id'],{})
             pins.extend(list(rows.values()) if isinstance(rows,dict) else list(rows))
     requested=[{'id':int(item_id)} for item_id in config.get('quick_item_ids',[])[-20:]]

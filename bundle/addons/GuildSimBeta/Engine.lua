@@ -1,0 +1,3 @@
+local _, ns = ...
+ns.engineCommit = "d45287b64a140010800d631852ccc1f1a1bf91e2"
+ns.engineVersion = "v1.0.6"

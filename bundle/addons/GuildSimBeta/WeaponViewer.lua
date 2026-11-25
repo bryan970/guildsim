@@ -97,6 +97,7 @@ function ns.SameCatalogExport(a,b,payload)
 end
 function ns.ProjectionWeightsFresh(name)
     local p=ns.payload
+    if p and ns.engineCommit and (not p.wowsims or p.wowsims.upstream_commit~=ns.engineCommit) then return false,"Simulation engine updated. Update sims to refresh these weights." end
     if not p or (p.context~="equipped" and p.mode~="current") then return true end
     local targetView=GuildSimBetaDB and GuildSimBetaDB.weightView=="target"
     if name and name:find("Planning",1,true) then
@@ -148,6 +149,7 @@ end
 function ns.WeaponData(contextKey)
     local result = ns.weaponResults
     if not result or UnitGUID("player") ~= result.guid then return nil, "No full weapon results for this character yet." end
+    if ns.engineCommit and result.engineCommit~=ns.engineCommit then return nil,"Simulation engine updated. Click Update sims, reload, then load results when the helper is ready." end
     if time() - result.generated > 7 * 86400 then return nil, "Weapon results are over a week old. Capture weapons and rerun the helper." end
     local context
     for _, c in ipairs(result.contexts) do if c.key == (contextKey or ns.weaponContext) then context = c end end
@@ -282,9 +284,15 @@ local function queue(link)
     return true
 end
 function ns.QueueWeaponLink(link)
-    if ns.weaponResults and ns.weaponResults.catalogMode then return false end
     local id,suffix=itemParts(link)
     if not id then return false end
+    if ns.weaponResults and ns.weaponResults.catalogMode then
+        for _,context in ipairs(ns.weaponResults.contexts or {}) do
+            for _,row in ipairs(context.weapons or {}) do
+                if row.id==id and (row.randomSuffix or 0)==suffix then return false end
+            end
+        end
+    end
     local queues=GuildSimBetaDB and GuildSimBetaDB.weaponQueue
     local queueForPlayer=queues and queues[UnitGUID("player")]
     local old=queueForPlayer and queueForPlayer[id..":"..suffix]

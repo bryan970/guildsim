@@ -10,6 +10,21 @@ from lupa.lua51 import LuaRuntime
 
 
 class GearBrowserTests(unittest.TestCase):
+    def test_engine_upgrade_rejects_older_weapon_and_projection_results(self):
+        lua,ns=self.fixture();ns.engineCommit='new-engine'
+        ns.weaponResults=lua.table_from({'guid':'TEST','engineCommit':'old-engine'},recursive=True)
+        context,why=ns.WeaponData('equipped');self.assertIsNone(context);self.assertIn('engine updated',why)
+        ns.payload=lua.table_from({'mode':'current','wowsims':{'upstream_commit':'old-engine'}},recursive=True)
+        fresh,why=ns.ProjectionWeightsFresh();self.assertFalse(fresh);self.assertIn('engine updated',why)
+    def test_stale_weapon_results_preserve_catalog_without_claiming_current_dps(self):
+        lua,ns=self.fixture()
+        ns.WeaponData=lua.eval('function()return nil,"Gear changed; update needed"end')
+        ns.weaponResults=lua.table_from({'guid':'TEST','contexts':[{'key':'equipped','enchant':1900,'weapons':[{'id':99,'name':'Saved weapon','dps':650,'delta':10,'iterations':12500}]}]},recursive=True)
+        rows,why=ns.GearBrowserRows(13,False)
+        row=next(r for r in rows.values() if r.id==99)
+        self.assertTrue(row.stale);self.assertIsNone(row.dps);self.assertEqual(why,'Gear changed; update needed')
+        ns.ShowGearBrowser('gear',15)
+        self.assertIn('need update',lua.globals().GuildSimBetaGearBrowser.pageText.value)
     def test_unsimulated_suffix_variants_remain_visible_beside_a_simulated_variant(self):
         lua,ns=self.fixture()
         ns.itemResults=lua.table_from({'names':{1:'Random helm'},'items':{'1:10:0':{'id':1,'name':'Random helm','randomSuffix':10,'dps':600,'delta':1}},

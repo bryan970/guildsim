@@ -2,7 +2,7 @@
 
 Guildmates use the installer. These tools are only needed to build a release.
 
-Use Windows x64, Python 3.13, PyInstaller 6.22.3 and Go 1.27.4. The engine source is pinned to WoWSims Forever `a8bd7fd83a3a7c5102012ed87d86a71d175b3a89` (v1.0.4). Place its checkout at `engine/upstream`, and the official WowSimsExporter package at `bundle/addons/WowSimsExporter`. Keep their licenses. GuildSim adds a single host initialization hook; copy `engine/patches/guildsim_assignment.go` into `engine/upstream/sim/core`. No existing native spell or rotation implementation is replaced.
+Use Windows x64, Python 3.13, PyInstaller 6.22.3 and Go 1.27.4. The engine source is pinned to WoWSims Forever `d45287b64a140010800d631852ccc1f1a1bf91e2` (v1.0.6). Place its checkout at `engine/upstream`, and the official WowSimsExporter package at `bundle/addons/WowSimsExporter`. Keep their licenses. GuildSim adds a single host initialization hook; copy `engine/patches/guildsim_assignment.go` into `engine/upstream/sim/core`. No existing native spell or rotation implementation is replaced.
 
 Build native executables from the `engine` directory:
 
@@ -35,5 +35,7 @@ Publish these assets to the dedicated `bryan970/guildsim` repository:
 The release must be selected as the latest release so the stable `/releases/latest/download/` URLs resolve. Its title and version clearly identify the beta; do not hide the experimental Priest status. Bump the application/addon version for each published build; never silently replace an installed version with different bytes. Keep the preceding release available for recovery.
 
 No other repositories, workflows or secrets are required for this distribution.
+
+The optional `engine-release-watch.yml` workflow uses only this repository's built-in token with read access to contents and write access to issues. It checks public upstream release metadata daily and maintains a single upgrade issue. It never publishes a binary or accesses the release signing key. The helper independently checks upstream every six hours; tested engine updates continue through the signed GuildSim release feed.
 
 For tests, install Lupa into the maintainer Python environment (or point `GUILDSIM_QA_LIBS` at its installation), run `python -m unittest test_beta test_addon test_ret_browser test_updates test_ret_runtime test_healing`, and from `engine` run `go test -tags with_db ./healsim`. The native healing tests exercise consumed shields, real health deficits/deaths, no-casting controls and deterministic seeds. Helper integration tests run gear and trinket candidates across all three assignments, preserve separate fight records, and check cache reuse. These are beta-model checks; guild in-game acceptance and encounter calibration remain necessary.

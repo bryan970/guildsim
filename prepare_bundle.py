@@ -1,6 +1,6 @@
 """Build public data only. Never copy account exports or personal config."""
 import hashlib
-from helper import VERSION
+from helper import VERSION, ENGINE_VERSION, ENGINE_COMMIT
 import importlib.util
 import json
 import os
@@ -13,6 +13,10 @@ ENGINE=HERE/'engine/upstream'
 DEST=HERE/'bundle'
 
 def run():
+    (DEST/'addons/GuildSimBeta/Engine.lua').write_text('local _, ns = ...\nns.engineCommit = "'+ENGINE_COMMIT+'"\nns.engineVersion = "'+ENGINE_VERSION+'"\n',encoding='utf-8')
+    profiles=json.loads((DEST/'profiles.json').read_text(encoding='utf-8'))
+    profiles.update(engineVersion=ENGINE_VERSION,engineCommit=ENGINE_COMMIT)
+    (DEST/'profiles.json').write_text(json.dumps(profiles,indent=2),encoding='utf-8')
     if not (DEST/'addons/WowSimsExporter').exists():
         exporter=os.environ.get('GUILDSIM_EXPORTER_SOURCE')
         if not exporter:raise ValueError('Provide the official exporter package through GUILDSIM_EXPORTER_SOURCE.')
@@ -32,8 +36,8 @@ def run():
             for key,row in source.items():
                 if key=='quest':sources.append(row.get('name','Quest'))
                 elif key=='crafted':sources.append(professions.get(row.get('profession'),'Crafting'))
-                elif key=='drop':sources.append(' — '.join(filter(None,[npcs.get(row.get('npcId'),row.get('otherName','')),zones.get(row.get('zoneId'),'')])) or 'Drop; source unverified')
-                elif key=='soldBy':sources.append(' — '.join(filter(None,[row.get('npcName',npcs.get(row.get('npcId'),'')),zones.get(row.get('zoneId'),'')])) or 'Vendor')
+                elif key=='drop':sources.append(' â€” '.join(filter(None,[npcs.get(row.get('npcId'),row.get('otherName','')),zones.get(row.get('zoneId'),'')])) or 'Drop; source unverified')
+                elif key=='soldBy':sources.append(' â€” '.join(filter(None,[row.get('npcName',npcs.get(row.get('npcId'),'')),zones.get(row.get('zoneId'),'')])) or 'Vendor')
         items[str(item['id'])]={k:item[k] for k in keys if k in item}
         items[str(item['id'])]['source']='; '.join(dict.fromkeys(sources)) or 'Acquisition source unverified'
         if item['id'] in missing:items[str(item['id'])]['missingEffects']=missing[item['id']]
@@ -51,6 +55,6 @@ def manifest(base):
     addon=base/'addons/GuildSimBeta/GuildSim.lua'
     if addon.exists() and 'if p.version~=' in addon.read_text(encoding='utf-8') and ('p.version~="'+VERSION+'"') not in addon.read_text(encoding='utf-8'):
         raise ValueError('Addon result version does not match the helper release')
-    (base/'manifest.json').write_text(json.dumps({'version':VERSION,'engineVersion':'v1.0.4','engineCommit':'a8bd7fd83a3a7c5102012ed87d86a71d175b3a89','files':files},indent=2),encoding='utf-8')
+    (base/'manifest.json').write_text(json.dumps({'version':VERSION,'engineVersion':ENGINE_VERSION,'engineCommit':ENGINE_COMMIT,'files':files},indent=2),encoding='utf-8')
 
 if __name__=='__main__':run();manifest(DEST)

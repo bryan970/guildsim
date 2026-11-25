@@ -147,6 +147,7 @@ end
 function ns.ItemComparisonsFresh()
     local p=ns.itemResults
     if not p or p.guid~=UnitGUID("player") then return false,"Item sims have not been loaded for this character." end
+    if ns.engineCommit and p.engineCommit~=ns.engineCommit then return false,"Simulation engine updated. Click Update sims to refresh comparisons." end
     if time()-p.generated>7*86400 then return false,"Item simulations need refreshing." end
     if not ns.LiveSimExport or not (ns.SameCatalogExport or ns.SameCombatExport)(ns.LiveSimExport(),p.sourceExport,p) then return false,"Your combat gear or talents changed. Click Update sims in /guildsim." end
     return true
@@ -456,7 +457,7 @@ local function browserRows(slotType,pairMode)
     if pairMode then
         local pairs=pairData()
         if not pairs then return rows,"This matchup is not simulated. Choose Sim this matchup to request it." end
-        local expectedEngine=ns.payload and ns.payload.wowsims and ns.payload.wowsims.upstream_commit or (p and p.engineCommit)
+        local expectedEngine=ns.engineCommit or ns.payload and ns.payload.wowsims and ns.payload.wowsims.upstream_commit or (p and p.engineCommit)
         local expectedModel=p and p.combatModel
         local fresh=pairs and pairs.guid==UnitGUID("player") and ns.LiveSimExport and
             ns.SameCatalogExport(ns.LiveSimExport(),pairs.sourceExport,pairs) and time()-pairs.generated<7*86400 and
@@ -475,12 +476,16 @@ local function browserRows(slotType,pairMode)
     if slotType==13 then
         local context,result=ns.WeaponData("equipped")
         fresh=context~=nil;if fresh then why=nil else why=result end
+        if not context and ns.weaponResults and ns.weaponResults.guid==UnitGUID("player") then
+            for _,previous in ipairs(ns.weaponResults.contexts or {}) do if previous.key=="equipped" then context=previous;break end end
+        end
         for _,row in ipairs(context and context.weapons or {}) do
             known[row.id..":"..(row.randomSuffix or 0)]=true
             local meta=p and p.browserItems and p.browserItems[row.id] or {}
             rows[#rows+1]={id=row.id,name=row.name,source=meta[5] or "Acquisition source unverified",group=meta[4] or "Other",quality=meta[2] or 3,icon=meta[3],
                 first={id=row.id,randomSuffix=row.randomSuffix,enchant=context.enchant},
-                dps=row.dps,delta=row.delta,provisional=row.provisional or row.provisionalProc,uncertain=row.uncertain}
+                dps=fresh and row.dps or nil,delta=fresh and row.delta or nil,stale=not fresh,provisional=row.provisional or row.provisionalProc,uncertain=row.uncertain,
+                screening=(row.iterations or 0)<10000}
         end
     elseif p then
         local function add(k)
@@ -558,6 +563,7 @@ local function refreshBrowser()
     local reference=(data and data.comparisonLabel or "No simulation setup loaded"):gsub("^Reference trinkets: ","")
     f.setup:SetText((data and data.baselineDps and string.format("Reference: %.1f DPS   ·   ",data.baselineDps) or "")..reference)
     local rows,why=browserRows(browserSlots[f.slot][3],pairMode)
+    if why then f.setup:SetText("Saved setup · update needed   ·   "..reference) end
     local query=f.search:GetText():lower();local selected=sourceGroups[f.source]
     local filtered={}
     for _,row in ipairs(rows) do
@@ -573,7 +579,8 @@ local function refreshBrowser()
     local pageSize=pairMode and 11 or 14
     local pages=math.max(1,math.ceil(#filtered/pageSize));f.page=math.min(f.page,pages)
     local simulated=0;for _,row in ipairs(filtered) do if row.dps then simulated=simulated+1 end end
-    f.pageText:SetText(string.format("%d simulated / %d listed   ·   Page %d of %d",simulated,#filtered,f.page,pages))
+    local stale=0;for _,row in ipairs(filtered) do if row.stale then stale=stale+1 end end
+    f.pageText:SetText(stale>0 and string.format("%d current · %d need update / %d listed · Page %d of %d",simulated,stale,#filtered,f.page,pages) or string.format("%d simulated / %d listed   ·   Page %d of %d",simulated,#filtered,f.page,pages))
     f.status:SetText(poolEdited and "Pool edited. Click Update sims to save it; load results when the helper is ready." or why or
         "Reference DPS. ~ screening estimate   * partial model   ≈ within sampling error. Hover for item details.")
     if pairMode and data and not poolEdited then
@@ -614,7 +621,7 @@ local function refreshBrowser()
             b.item:SetText(pairMode and (row.detail.firstName.."\n"..row.detail.secondName) or row.name)
             b.item:SetHeight(pairMode and 34 or 18)
             b.item:SetTextColor(color[1],color[2],color[3])
-            b.model:SetText(not row.dps and "Not simulated" or row.provisional and "Partial model" or row.uncertain and "Statistical tie" or row.screening and "Screening estimate" or "Simulated")
+            b.model:SetText(row.stale and "Saved result · update needed" or not row.dps and "Not simulated" or row.provisional and "Partial model" or row.uncertain and "Statistical tie" or row.screening and "Screening estimate" or "Simulated")
             b.model:SetShown(not pairMode)
             b.source:SetText(row.source or "Acquisition source unverified")
             b.dps:SetText(row.dps and string.format("%.1f",row.dps) or "—")

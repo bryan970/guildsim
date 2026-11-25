@@ -1,6 +1,6 @@
 {
-  "upstream_commit": "a8bd7fd83a3a7c5102012ed87d86a71d175b3a89",
-  "release_tag": "v1.0.4",
-  "release_url": "https://github.com/wowsims/forever/releases/tag/v1.0.4",
-  "guildRelease": "0.2.0-beta.1"
+  "upstream_commit": "d45287b64a140010800d631852ccc1f1a1bf91e2",
+  "release_tag": "v1.0.6",
+  "release_url": "https://github.com/wowsims/forever/releases/tag/v1.0.6",
+  "guildRelease": "0.2.0-beta.5"
 }

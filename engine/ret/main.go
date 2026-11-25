@@ -122,7 +122,7 @@ func main(){
  if *batchPath!="" {
   if *workers<1 || *workers>4 {panic("batch workers must be between 1 and 4")}
   runtime.GOMAXPROCS(*workers)
-  type Job struct {Label string `json:"label"`; Equipment json.RawMessage `json:"equipment"`}
+  type Job struct {Label string `json:"label"`; Equipment json.RawMessage `json:"equipment"`; Consumables json.RawMessage `json:"consumables"`}
   var jobs []Job;b,e=os.ReadFile(*batchPath);must(e);must(json.Unmarshal(b,&jobs))
   stream,e:=os.Create(*output);must(e);defer stream.Close();encoder:=json.NewEncoder(stream)
   queue:=make(chan Job);rows:=make(chan map[string]any,*workers)
@@ -130,6 +130,7 @@ func main(){
    func(){
    defer func(){if failure:=recover();failure!=nil {rows<-map[string]any{"label":job.Label,"iterations":*iterations,"error":fmt.Sprint(failure)}}}()
    candidate:=gp.Clone(req).(*proto.RaidSimRequest)
+   if len(job.Consumables)>0 {candidate.Raid.Parties[0].Players[0].Consumables=&proto.ConsumesSpec{};load(job.Consumables,candidate.Raid.Parties[0].Players[0].Consumables)}
    equipment:=&proto.EquipmentSpec{};load(job.Equipment,equipment)
    var missing []int32
    for _,item:=range equipment.Items {if item!=nil && item.Id!=0 && core.GetItemByID(item.Id)==nil {missing=append(missing,item.Id)}}

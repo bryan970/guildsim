@@ -9,6 +9,7 @@ local function exporter()
 end
 local function check(p)
     if not p then return false, "No result yet. Run the local Ret Sim helper." end
+    if ns.engineCommit and (not p.wowsims or p.wowsims.upstream_commit~=ns.engineCommit) then return false,"Simulation engine updated. Use Update sims in /guildsim to refresh results." end
     if UnitGUID("player") ~= p.guid then return false, "Result belongs to another character." end
     if time() - p.generated > 7 * 86400 then
         if p==ns.targetWeights then return false,"Final-target weights are over a week old. Run Run Target Weights.cmd, then /reload." end

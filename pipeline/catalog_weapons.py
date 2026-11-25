@@ -82,13 +82,15 @@ def refresh(config,force=False,publish=True):
     config=refresh_scope.catalog_config(config)
     record,character=run.latest(config)
     scenario=json.loads((BASE/'scenario.json').read_text(encoding='utf-8'))
-    db=w.database();choices,selection_errors=w.candidates(db,w.full_gear(character['gear']),{})
+    selected=refresh_scope.candidates(config,character)
+    db=w.database()
+    requested=[spec for spec in selected if spec and db.get(spec.get('id'),{}).get('handType')==4]
+    choices,selection_errors=w.candidates(db,w.full_gear(character['gear']),requested)
     full_catalog_hash=hashlib.sha256(json.dumps(choices,sort_keys=True).encode()).hexdigest()
     quick=refresh_scope.is_quick(config)
     state=BASE/'output/weapons.json'
     if quick:
         if state.exists():refresh_scope.archive('weapons',json.loads(state.read_text(encoding='utf-8')))
-        selected=refresh_scope.candidates(config,character)
         selected_keys={f'{item_id}:0' for item_id in w.SEEDS} | {f"{s.get('id')}:{s.get('randomSuffix',0)}" for s in selected if s}
         choices={key:spec for key,spec in choices.items() if key in selected_keys}
         selection_errors=[]
