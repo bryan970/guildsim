@@ -12,7 +12,7 @@ from prepare_bundle import manifest
 
 HERE=Path(__file__).parent
 OUTPUTS=Path(os.environ.get('GUILDSIM_OUTPUTS',str(HERE/'dist'))).resolve()
-RELEASE=OUTPUTS/'GuildSimBeta-0.2.0-beta.1'
+RELEASE=OUTPUTS/'GuildSimBeta-0.2.0-beta.2'
 
 def run():
     RELEASE.mkdir(parents=True,exist_ok=True)
@@ -68,7 +68,7 @@ def run():
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
         for path in RELEASE.rglob('*'):
             if path.is_file():z.write(path,RELEASE.name+'/'+path.relative_to(RELEASE).as_posix())
-    update={'schemaVersion':1,'channel':'beta','version':'0.2.0-beta.1','sequence':int(time.time()),'minimumLauncher':1,'url':'https://github.com/bryan970/guildsim/releases/download/v0.2.0-beta.1/'+archive.name,'size':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest()}
+    update={'schemaVersion':1,'channel':'beta','version':'0.2.0-beta.2','sequence':int(time.time()),'minimumLauncher':1,'url':'https://github.com/bryan970/guildsim/releases/download/v0.2.0-beta.2/'+archive.name,'size':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest()}
     update_path=OUTPUTS/'update.json';update_path.write_text(json.dumps(update,sort_keys=True,separators=(',',':')),encoding='utf-8')
     signature=OUTPUTS/'update.json.sig'
     subprocess.run([str(HERE/'signing/signrelease.exe'),'--key',str(HERE/'signing/release.ed25519'),'--file',str(update_path),'--out',str(signature)],check=True)

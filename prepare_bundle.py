@@ -47,6 +47,6 @@ def run():
 
 def manifest(base):
     files={p.relative_to(base).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in base.rglob('*') if p.is_file() and p.name!='manifest.json' and '__pycache__' not in p.parts and p.suffix!='.pyc'}
-    (base/'manifest.json').write_text(json.dumps({'version':'0.2.0-beta.1','engineVersion':'v1.0.4','engineCommit':'a8bd7fd83a3a7c5102012ed87d86a71d175b3a89','files':files},indent=2),encoding='utf-8')
+    (base/'manifest.json').write_text(json.dumps({'version':'0.2.0-beta.2','engineVersion':'v1.0.4','engineCommit':'a8bd7fd83a3a7c5102012ed87d86a71d175b3a89','files':files},indent=2),encoding='utf-8')
 
 if __name__=='__main__':run();manifest(DEST)

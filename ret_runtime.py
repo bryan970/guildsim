@@ -63,9 +63,15 @@ class RetRunner:
         log=work/'output/helper.log'
         with log.open('w',encoding='utf-8') as stream:
             self.process=subprocess.Popen(command,stdout=stream,stderr=subprocess.STDOUT,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
-            published=0;last=''
+            published=0;last='';progress={}
             while self.process.poll() is None:
-                progress=h.read_json(work/'output/progress.json',{})
+                try:
+                    progress=h.read_json(work/'output/progress.json',progress)
+                except (PermissionError,json.JSONDecodeError):
+                    # Windows can briefly deny reads during a snapshot replacement.
+                    # Progress is observational: keep waiting for our worker and
+                    # retain the last display rather than abandoning a live job.
+                    pass
                 message=progress.get('stage','Native Ret workflow')+' · '+progress.get('detail','Starting')
                 if message!=last:notify(message);last=message
                 if time.monotonic()-published>30:

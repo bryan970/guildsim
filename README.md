@@ -4,7 +4,7 @@ WoW Forever guild addon and Windows helper, distributed separately from other pr
 
 **[Download the installer](https://github.com/bryan970/guildsim/releases/latest/download/GuildSim-Setup.exe)** · [Release notes](https://github.com/bryan970/guildsim/releases/latest)
 
-Current release: **0.2.0-beta.1**. Ready for guild beta acceptance testing; Priest remains a stats planner. Use this installer instead of the earlier 0.1 ZIP.
+Current release: **0.2.0-beta.2**. Ready for guild beta acceptance testing; Priest remains a stats planner. Use this installer instead of the earlier 0.1 ZIP.
 
 ## Install once
 
