@@ -6,7 +6,11 @@
     "ret": {
       "class": "paladin",
       "role": "damage",
-      "races": ["Human", "Dwarf", "Undead"],
+      "races": [
+        "Human",
+        "Dwarf",
+        "Undead"
+      ],
       "backend": "wowsims-forever-native",
       "objective": "DPS",
       "status": "beta",
@@ -16,14 +20,28 @@
     "disc-raid": {
       "class": "priest",
       "role": "raid-healer",
-      "races": ["Human", "Dwarf", "NightElf", "Gnome", "Undead", "Troll"],
-      "backend": "wowsims-forever-native-stats",
-      "objective": "Character stats only",
-      "status": "experimental-stats-planner",
+      "races": [
+        "Human",
+        "Dwarf",
+        "NightElf",
+        "Gnome",
+        "Undead",
+        "Troll"
+      ],
+      "backend": "wowsims-forever-native-guildsim-assignment-host",
+      "objective": "Effective healing plus consumed absorbs; survival first",
+      "status": "beta-healing-assignment",
       "requirements": "Level 60, at least 31 points in Discipline, at least 12 equipped items.",
-      "defaults": "Exported talents and professions, no raid buffs or consumables. Override explicitly using local scenario.json.",
-      "healingSimulation": false,
-      "limitations": ["No effective HPS or throughput simulation", "No overhealing, consumed-absorb, healing AI or healer-competition model", "No healing trinket or set-proc ranking", "Upstream sheet may omit Holy Specialization extra crit"]
+      "defaults": "Declared group, tank or burst assignment; raid support, Distilled Wisdom, Nightfin Soup and Major Mana Potion. Override support explicitly in local scenario.json.",
+      "healingSimulation": true,
+      "limitations": [
+        "Stationary assigned workload; not a coupled 40-player raid",
+        "No movement, dispels, positioning or competing healers",
+        "Post-mitigation damage excludes defensive mitigation utility",
+        "Fixed casting priorities are not an optimal-play guarantee",
+        "Native item-effect gaps remain labelled"
+      ],
+      "healingModel": "guildsim-disc-assignment-1"
     }
   }
 }

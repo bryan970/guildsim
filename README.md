@@ -4,7 +4,7 @@ WoW Forever guild addon and Windows helper, distributed separately from other pr
 
 **[Download the installer](https://github.com/bryan970/guildsim/releases/latest/download/GuildSim-Setup.exe)** · [Release notes](https://github.com/bryan970/guildsim/releases/latest)
 
-Current release: **0.2.0-beta.3**. Ready for guild beta acceptance testing; Priest remains a stats planner. Use this installer instead of the earlier 0.1 ZIP.
+Current release: **0.2.0-beta.4**. Ret and Discipline healing assignments are ready for guild beta acceptance testing. Use this installer instead of the earlier ZIPs.
 
 ## Install once
 
@@ -25,9 +25,17 @@ Updates to the addon, helper and pinned engine come together through this reposi
 | Profile | Races | Status |
 |---|---|---|
 | Retribution Paladin | Human, Dwarf, Undead | Native DPS, stat weights, gear and weapon/enchant comparisons, catalogs and trinket combinations; Unsealed Wrath build |
-| Discipline raid-healer Priest | Human, Dwarf, Night Elf, Gnome, Undead, Troll | **Stats planner only**: healing power, mana, regen and crit; no HPS simulation |
+| Discipline raid-healer Priest | Human, Dwarf, Night Elf, Gnome, Undead, Troll | Native fight simulation: effective healing, consumed absorbs, survival, mana, overhealing, gear catalog and separate trinket combinations |
 
 Ret includes character-pane browsing, GearMatic imports and Forever stat handling, fixed catalog reference trinkets, independently simulated trinket pairs in both orders, creature-type/family profiles, Rune of the Dawn against Undead, partial-model/confidence labels, resumable native caches, custom farming targets, separate target-set weights and a local SQLite fight library. Leveling projections are labeled as level-60 models.
+
+Priests choose **Group healing**, **Tank healing**, or **Burst recovery**, and a three- or five-minute fight in `/guildsim`, then Update sims and reload. The helper runs 256 seeded fights per comparison by default. Both trinket orders are simulated; catalogs use the stable reference pair. Cached requests include race, talents, gear, engine, assignment, duration, and raid support. Returning to a prior setup reuses its results.
+
+Useful HPS is effective healing plus shields actually consumed by damage. Overhealing and unused shields earn no score. Results meeting 99% assignment survival rank first; otherwise survival ranks before HPS. Hover for mana reserve, effective healing, absorbs, overhealing, and sampling margins. Small HPS differences are marked as ties. Native item effects and set bonuses apply; missing effects remain labelled.
+
+The declared assignment has four recipients with 18,000 health. Group damage averages 800 total post-mitigation damage per second, tank damage focuses 700 per second on one recipient, and burst damage uses a documented twelve-second pulse pattern around the group workload. One-second damage rolls vary by ±20%. Native highest available ranks and affordable lower-rank fallbacks follow Shield, Penance, Renew, Greater Heal, Flash Heal and Heal priorities with health-deficit thresholds. Native mana/item cooldown conditions apply. Baseline support includes intellect, stamina, spirit, Mark, Moonkin Aura, Kings, Wisdom, Mana Spring and Concentration; consumables are Distilled Wisdom, Nightfin Soup and Major Mana Potion. No Atiesh or external Innervate/Mana Tide is assumed. `scenario.json` in local data can explicitly override buffs and consumes.
+
+This is GuildSim's own native assignment host, using the pinned WoWSims spell, talent, racial, mana and item mechanics. KFC's published assignment comparisons informed the assessment of the required metrics; no KFC code, service or account is embedded or required.
 
 ## Move an existing personal Ret setup
 
@@ -35,10 +43,10 @@ Choose the Ret character and **Move personal setup** in the helper. Select the o
 
 ## Beta limits
 
-In-game guild acceptance testing is required. Native item-effect coverage is incomplete; partial-model and statistical-error labels remain visible. The Priest profile does not rank healing performance. GearMatic is a separate prerequisite and is not bundled or modified. The Windows installer is not Authenticode signed; update metadata uses a separate Ed25519 release signature.
+In-game guild acceptance testing is required. Native item-effect coverage is incomplete; partial-model and statistical-error labels remain visible. Healing results describe a stationary assigned workload, not an entire 40-player raid. Movement, dispels, positioning and defensive utility against pre-mitigation damage are outside that assignment. The fixed casting policy is a reproducible comparison, not a claim of optimal play. GearMatic is a separate Ret prerequisite and is not bundled or modified. The Windows installer is not Authenticode signed; update metadata uses a separate Ed25519 release signature.
 
 ## Source and credits
 
-The release archive includes GuildSim source and dependency notices. Native engine: [WoWSims Forever](https://github.com/wowsims/forever), pinned to v1.0.4, commit `a8bd7fd83a3a7c5102012ed87d86a71d175b3a89`. Exporter: [WowSimsExporter](https://github.com/wowsims/exporter). Both retain their MIT notices. GuildSim-owned code is MIT licensed. GearMatic retains its own license.
+The release archive includes GuildSim source and dependency notices. Native engine: [WoWSims Forever](https://github.com/wowsims/forever), pinned to v1.0.4, commit `a8bd7fd83a3a7c5102012ed87d86a71d175b3a89`, with an additive GuildSim initialization hook for friendly assignments. Existing native spell mechanics and Ret entry points are unchanged. Exporter: [WowSimsExporter](https://github.com/wowsims/exporter). Both retain their MIT notices. GuildSim-owned code is MIT licensed. GearMatic retains its own license.
 
 Not affiliated with Blizzard, WoWSims or GearMatic.

@@ -1,5 +1,6 @@
 """Build public data only. Never copy account exports or personal config."""
 import hashlib
+from helper import VERSION
 import importlib.util
 import json
 import os
@@ -47,6 +48,9 @@ def run():
 
 def manifest(base):
     files={p.relative_to(base).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in base.rglob('*') if p.is_file() and p.name!='manifest.json' and '__pycache__' not in p.parts and p.suffix!='.pyc'}
-    (base/'manifest.json').write_text(json.dumps({'version':'0.2.0-beta.3','engineVersion':'v1.0.4','engineCommit':'a8bd7fd83a3a7c5102012ed87d86a71d175b3a89','files':files},indent=2),encoding='utf-8')
+    addon=base/'addons/GuildSimBeta/GuildSim.lua'
+    if addon.exists() and 'if p.version~=' in addon.read_text(encoding='utf-8') and ('p.version~="'+VERSION+'"') not in addon.read_text(encoding='utf-8'):
+        raise ValueError('Addon result version does not match the helper release')
+    (base/'manifest.json').write_text(json.dumps({'version':VERSION,'engineVersion':'v1.0.4','engineCommit':'a8bd7fd83a3a7c5102012ed87d86a71d175b3a89','files':files},indent=2),encoding='utf-8')
 
 if __name__=='__main__':run();manifest(DEST)

@@ -2,11 +2,12 @@
 
 Guildmates use the installer. These tools are only needed to build a release.
 
-Use Windows x64, Python 3.13, PyInstaller 6.22.3 and Go 1.27.4. The engine source is pinned to WoWSims Forever `a8bd7fd83a3a7c5102012ed87d86a71d175b3a89` (v1.0.4). Place its unmodified checkout at `engine/upstream`, and the official WowSimsExporter package at `bundle/addons/WowSimsExporter`. Keep their licenses.
+Use Windows x64, Python 3.13, PyInstaller 6.22.3 and Go 1.27.4. The engine source is pinned to WoWSims Forever `a8bd7fd83a3a7c5102012ed87d86a71d175b3a89` (v1.0.4). Place its checkout at `engine/upstream`, and the official WowSimsExporter package at `bundle/addons/WowSimsExporter`. Keep their licenses. GuildSim adds a single host initialization hook; copy `engine/patches/guildsim_assignment.go` into `engine/upstream/sim/core`. No existing native spell or rotation implementation is replaced.
 
 Build native executables from the `engine` directory:
 
 ```powershell
+Copy-Item patches/guildsim_assignment.go upstream/sim/core/guildsim_assignment.go
 go build -trimpath -buildvcs=false -ldflags="-s -w" -tags=with_db -o ../bundle/guildsim-engine.exe .
 go build -trimpath -buildvcs=false -ldflags="-s -w" -tags=with_db -o ../bundle/ret-engine/retlocal.exe ./ret
 go build -trimpath -buildvcs=false -ldflags="-s -w" -tags=with_db -o ../bundle/ret-engine/retbulk.exe ./bulk
@@ -34,3 +35,5 @@ Publish these assets to the dedicated `bryan970/guildsim` repository:
 The release must be selected as the latest release so the stable `/releases/latest/download/` URLs resolve. Its title and version clearly identify the beta; do not hide the experimental Priest status. Bump the application/addon version for each published build; never silently replace an installed version with different bytes. Keep the preceding release available for recovery.
 
 No other repositories, workflows or secrets are required for this distribution.
+
+For tests, install Lupa into the maintainer Python environment (or point `GUILDSIM_QA_LIBS` at its installation), run `python -m unittest test_beta test_addon test_ret_browser test_updates test_ret_runtime test_healing`, and from `engine` run `go test -tags with_db ./healsim`. The native healing tests exercise consumed shields, real health deficits/deaths, no-casting controls and deterministic seeds. Helper integration tests run gear and trinket candidates across all three assignments, preserve separate fight records, and check cache reuse. These are beta-model checks; guild in-game acceptance and encounter calibration remain necessary.

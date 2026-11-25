@@ -1,0 +1,24 @@
+GuildSim healing backend — 24 November 2026
+
+Discipline now runs native healing fights using WoWSims Forever v1.0.4
+spell, talent, racial, mana and item mechanics, plus GuildSim's own declared
+friendly-damage assignments and casting policy. Source is included.
+
+Metrics: effective healing, actually consumed absorbs, useful HPS,
+overhealing, assignment survival, mana reserve and sampling margins.
+Group, tank and burst assignments have separate cached fight records.
+Gear catalogs use stable reference trinkets; pair comparisons test both
+orders. Broad catalogs screen variants and refine leading candidates.
+
+The initialization hook is an additive MIT-licensed host extension.
+Existing native spell implementations and Ret entry points are preserved.
+
+KFC Helper was reviewed as a reference for useful-healing metrics:
+https://kfcguild.online/tools/forever/tier-list/healers
+No KFC code, service, account or runtime is integrated or redistributed.
+
+Limits: stationary post-mitigation assignments, fixed healing priorities,
+no movement, dispels or competition from other healers, and no full-raid
+prediction. Native item-effect gaps remain labelled. In-game guild
+acceptance and fight calibration are still required. See README.md for
+exact default damage, buffs, consumables and casting-policy assumptions.

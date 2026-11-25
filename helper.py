@@ -25,11 +25,11 @@ import uuid
 
 from lua_data import loads, saved_characters
 
-VERSION = '0.2.0-beta.3'
+VERSION = '0.2.0-beta.4'
 ENGINE_COMMIT = 'a8bd7fd83a3a7c5102012ed87d86a71d175b3a89'
 BASE = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent / 'bundle'
 STATE = Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / 'GuildSimBeta'
-PROFILES = {'ret': 'Retribution — native DPS', 'disc-raid': 'Discipline raid healer — stats planner'}
+PROFILES = {'ret': 'Retribution — native DPS', 'disc-raid': 'Discipline — native healing assignments'}
 SLOTS = ['Head','Neck','Shoulders','Back','Chest','Wrists','Hands','Waist','Legs','Feet','Ring 1','Ring 2','Trinket 1','Trinket 2','Main hand','Off hand','Relic / wand']
 TYPES = {1:[0],2:[1],3:[2],4:[3],5:[4],6:[5],7:[6],8:[7],9:[8],10:[9],11:[10,11],12:[12,13],13:[14],14:[16]}
 UTILITY = {11122,12846}
@@ -272,6 +272,10 @@ class Runner:
         if mob not in TARGETS.values() or not 0<=family<len(FAMILIES): raise ValueError('Invalid encounter profile')
         scenario=read_json(self.state/'scenario.json',{})
         base_request={'profile':profile,'character':char,'reference':refgear,'iterations':settings.get('iterations',12500),'duration':settings.get('duration',180),'mobType':mob,'creatureFamily':family,'scenario':scenario}
+        if profile=='disc-raid':
+            assignment=request.get('healingAssignment','group');duration=int(request.get('healingDuration',180))
+            if assignment not in ('group','tank','burst') or duration not in (180,300):raise ValueError('Invalid healing assignment or duration')
+            base_request.update(iterations=int(settings.get('healing_iterations',256)),duration=duration,healing={'assignment':assignment})
         # Remember observed combat trinkets even after they move to the bank.
         poolfile=self.state/'characters'/identity/'trinket-pool.json'
         remembered=read_json(poolfile,{})
@@ -297,6 +301,10 @@ class Runner:
             return result
         notify(f'{char.get("name")} · {PROFILES[profile]} · baseline')
         baseline=evaluate({**base_request,'candidates':[]})
+        if profile=='disc-raid':
+            completed=self.healing_comparisons(addon,char,baseline,jobs,ref,mob,family,base_request,full,notify)
+            notify(f'Ready: {char.get("name")} · {len(completed)} healing comparisons. Use /reload to load results.')
+            return baseline,completed
         completed=[]
         published=time.monotonic()
         for number,job in enumerate(jobs):
@@ -315,6 +323,63 @@ class Runner:
         notify(f'Ready: {char.get("name")} · {len(completed)} comparisons. Use /reload to load results.')
         return baseline,completed
 
+    def healing_comparisons(self,addon,char,baseline,jobs,ref,mob,family,base_request,full,notify):
+        """Batch native fights; cache every variant and refine broad-catalog leaders."""
+        cache=self.state/'healing-cache';rows={};published=time.monotonic()
+        final_iterations=base_request['iterations']
+        if not 20<=final_iterations<=10000:raise ValueError('Healing comparisons require 20..10000 fights')
+        def run_batch(chunk,iterations):
+            missing={};found={}
+            for job in chunk:
+                context=copy.deepcopy(base_request);context['character']['gear']=job['gear']
+                context.update(iterations=iterations,skipBaseline=True,candidates=[{'key':'candidate','gear':job['gear']}])
+                key=digest({'engine':self.engine,'adapter':VERSION,'request':context})
+                path=cache/key[:2]/(key+'.json');value=read_json(path)
+                if value is None:missing[key]=(job,path)
+                else:found[key]=value
+                job['_healing_cache_key']=key
+            if missing:
+                request=copy.deepcopy(base_request)
+                request.update(iterations=iterations,skipBaseline=True,candidates=[{'key':key,'gear':job['gear']} for key,(job,_) in missing.items()])
+                response=native(request,self.base)
+                for value in response['rows']:
+                    key=value['key']
+                    if key not in missing:raise ValueError('Native healing batch returned an unknown candidate')
+                    save(missing[key][1],value);found[key]=value
+                if len(found)<len({job['_healing_cache_key'] for job in chunk}):raise ValueError('Native healing batch is incomplete')
+            for job in chunk:
+                value=found[job['_healing_cache_key']]
+                clean={k:v for k,v in job.items() if not k.startswith('_')}
+                rows[job['key']]={**clean,**value,'key':job['key'],'screening':iterations<final_iterations}
+        def publish(complete):
+            self.publish(addon,char,'disc-raid',baseline,[rows[j['key']] for j in jobs if j['key'] in rows],ref,mob,family,len(jobs),complete)
+        screen_iterations=min(32,final_iterations) if full else final_iterations
+        for start in range(0,len(jobs),16):
+            if self.stop.is_set():raise InterruptedError('Paused. Completed healing batches are cached; click Run to resume.')
+            chunk=jobs[start:start+16];run_batch(chunk,screen_iterations)
+            notify(f'{char.get("name")} · {min(start+16,len(jobs))} / {len(jobs)} healing comparisons · {screen_iterations} fights each')
+            if time.monotonic()-published>=30 or start+16>=len(jobs):publish(not full);published=time.monotonic()
+        if full and screen_iterations<final_iterations:
+            def score(row):
+                alive=row.get('survival',0)
+                return (alive>=.99,alive if alive<.99 else 1,row.get('usefulHps',-1))
+            shortlist=[];counts={}
+            for job in sorted(jobs,key=lambda j:score(rows[j['key']]),reverse=True):
+                row=rows[job['key']]
+                if row.get('error'):continue
+                if job['kind']=='pair':shortlist.append(job);continue
+                per_item=counts.setdefault(job['slot'],{})
+                item=job['items'][0]['id']
+                if (item not in per_item and len(per_item)>=12) or per_item.get(item,0)>=2:continue
+                per_item[item]=per_item.get(item,0)+1;shortlist.append(job)
+            for start in range(0,len(shortlist),8):
+                if self.stop.is_set():raise InterruptedError('Paused. Completed healing batches are cached; click Run to resume.')
+                run_batch(shortlist[start:start+8],final_iterations)
+                notify(f'{char.get("name")} · refine healing upgrades {min(start+8,len(shortlist))} / {len(shortlist)} · {final_iterations} fights each')
+                if time.monotonic()-published>=30:publish(False);published=time.monotonic()
+        publish(True)
+        return [rows[j['key']] for j in jobs]
+
     def publish(self, addon, char, profile, baseline, rows, ref, mob, family, total, complete):
         output=[]
         for row in rows:
@@ -331,13 +396,29 @@ class Runner:
                     if meta.get('missingEffects'):gaps[str(spec['id'])]=meta['missingEffects']
             output.append({k:v for k,v in {**row,'items':items,'missingEffects':gaps}.items() if k!='gear'})
         payload={'version':VERSION,'engine':ENGINE_COMMIT,'generated':int(time.time()),'guid':char['id'],'name':char['name'],'race':char['race'],'profile':profile,'equipped':normalize_gear(char['gear'])['items'],'baseline':baseline['baseline'],'reference':baseline['reference'],'referencePair':ref,'mobType':mob,'creatureFamily':family,'rows':output,'total':total,'complete':complete,'talents':char['talents'],'talentSignature':char.get('guildTalentSignature'),'objective':baseline['objective']}
+        if profile=='disc-raid':payload['healingScenario']=baseline['baseline'].get('healingScenario')
         # Preserve results for alts; account identity stays in local state, addon payload is keyed by GUID.
         path=addon/'GuildResults.json';all_results=read_json(path,{})
+        if profile=='disc-raid':
+            context=copy.deepcopy(baseline['request'])
+            gear=normalize_gear(char['gear']);gear['items'][12:14]=ref
+            parties=context.get('raid',{}).get('parties',[])
+            if parties and parties[0].get('players'):parties[0]['players'][0]['equipment']=gear
+            else:context={'character':{**char,'gear':gear},'request':context}
+            payload['catalogContext']=digest({'engine':self.engine,'adapter':VERSION,'native':context,'healing':payload.get('healingScenario')})
+            old=all_results.get(char['id'],{})
+            if old.get('version')==VERSION and old.get('catalogContext')==payload['catalogContext']:
+                # Keep broad gear results when bags/pool change or combat trinkets
+                # are swapped. Pair rows always come from the current owned pool.
+                merged={r['key']:r for r in old.get('rows',[]) if r.get('kind')=='gear'}
+                merged.update({r['key']:r for r in output})
+                payload['rows']=list(merged.values());payload['total']=max(total,len(merged))
         all_results[char['id']]=payload
         save(path,all_results)
         atomic(addon/'Results.lua','local _, ns = ...\nns.results = '+lua(all_results)+'\n')
-        record=digest({'guid':char['id'],'profile':profile,'engine':self.engine,'request':baseline['request']})
-        save(self.state/'fights'/f'{record}.json',{'payload':payload,'nativeRequest':baseline['request']})
+        healing=baseline['baseline'].get('healingScenario') if profile=='disc-raid' else None
+        record=digest({'guid':char['id'],'profile':profile,'engine':self.engine,'request':baseline['request'],'healing':healing})
+        save(self.state/'fights'/f'{record}.json',{'payload':payload,'nativeRequest':baseline['request'],'healingScenario':healing})
 
 def diagnose(base=BASE):
     manifest=verify_bundle(base)
@@ -355,7 +436,7 @@ class App:
         self.settings=read_json(STATE/'settings.json',{});self.entries=[];self.busy=False;self.runner=None;self.events=queue.Queue()
         frame=ttk.Frame(self.window,padding=24);frame.pack(fill='both',expand=True)
         ttk.Label(frame,text='GuildSim Beta',style='Title.TLabel').pack(anchor='w')
-        ttk.Label(frame,text='Ret: Human · Dwarf · Undead   |   Discipline: native stats planner',wraplength=720).pack(anchor='w',pady=(5,20))
+        ttk.Label(frame,text='Ret: Human · Dwarf · Undead   |   Discipline: native healing assignments',wraplength=720).pack(anchor='w',pady=(5,20))
         ttk.Label(frame,text='1. Choose your WoW Forever folder').pack(anchor='w')
         line=ttk.Frame(frame);line.pack(fill='x',pady=6)
         default=self.settings.get('root','')
@@ -386,7 +467,7 @@ class App:
         ttk.Button(line,text='Open local data / fight library',command=lambda:os.startfile(STATE)).pack(side='left',padx=8)
         ttk.Button(line,text='Move personal setup',command=self.migrate).pack(side='left')
         ttk.Button(frame,text='Quit helper',command=self.quit).pack(anchor='w',pady=(5,0))
-        ttk.Label(frame,text='Catalog: fixed reference trinkets. Pair comparisons: exported combat gear.\nDisc shows healing power, mana, regen and crit changes; HPS is not available.',wraplength=720).pack(anchor='w',pady=12)
+        ttk.Label(frame,text='Catalog: fixed reference trinkets. Pair comparisons: exported combat gear.\nDisc simulates effective healing, consumed shields, survival, overhealing and mana for the selected assignment.',wraplength=720).pack(anchor='w',pady=12)
         self.status=tk.StringVar(value='Ready to install. Your existing RetSimBridge and helper remain untouched.')
         ttk.Label(frame,textvariable=self.status,wraplength=720,foreground='#156f83').pack(anchor='w',pady=10)
         self.window.protocol('WM_DELETE_WINDOW',self.close);self.window.after(500,self.poll)
@@ -551,7 +632,7 @@ def main():
                     result=native({'profile':profile,'character':char,'iterations':20,'duration':30,'candidates':[]},BASE)
                     if result['baseline'].get('error'):raise ValueError(result['baseline']['error'])
                     if profile=='ret' and result['baseline'].get('dps',0)<=0:raise ValueError('No native DPS')
-                    if profile=='disc-raid' and ('dps' in result['baseline'] or result['baseline']['stats']['HealingPower']<=0):raise ValueError('Invalid healer objective')
+                    if profile=='disc-raid' and ('dps' in result['baseline'] or result['baseline']['stats']['HealingPower']<=0 or result['baseline'].get('usefulHps',0)<=0):raise ValueError('Invalid healer objective')
                     checks.append({'profile':profile,'race':race,'passed':True})
             data['nativeSmokeTests']=checks
             portable=[]
